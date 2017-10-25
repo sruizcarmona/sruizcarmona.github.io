@@ -1,0 +1,1 @@
+for f in data/*peaks*; do samp=`echo $(basename $f) | awk '{print $1}' FS="_vs_"`; ctrl=`echo $(basename $f) | awk '{print $2}' FS="_vs_"`; sed 's/SAMP/'$samp'/' tb_template.tmp | sed 's/CTRL/'${ctrl%_peaks.bed}'/' | sed 's|PEAKSFILE|'$f'|' | sed 's|SUMMITFILE|'${f%_peaks.bed}'_summits.bed|'; done > table.html
