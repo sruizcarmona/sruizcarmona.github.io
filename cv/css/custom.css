@@ -3,8 +3,12 @@ h1, h2, ul, li {
 	padding: 0;
 }
 
+h1 {
+	width: 500px;
+}
+
 h2 {
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 	margin-top: 5px;
 }
 
@@ -13,7 +17,7 @@ h2 {
 }
 
 ul,li {
-	font-family: Arial;
+	font-family: Roboto, Arial, sans-serif;
 }
 
 i {
@@ -24,6 +28,12 @@ i {
 ul.basic_info li {
 	display: inline;
 	line-height: 6mm;
+}
+
+ul.cv_item_list li {
+	display: inline;
+	//line-height: 5.3mm;
+	font-size: 4mm;
 }
 
 div.social_information ul li {
@@ -47,14 +57,15 @@ div.social_information ul li {
 }
 
 .cv_name {
-	font-family: Georgia, sans-serif;
+	font-family: Roboto, Arial, sans-serif;
 	font-size: 12mm;
+	font-weight: 300;
 	margin-top: 0;
 	line-height: 12mm;
 }
 
 .cv_title {
-	font-family: Palatino, serif;
+	font-family: Roboto Condensed, sans-serif;
 	font-size: 5mm;
 }
 
@@ -68,7 +79,8 @@ div.social_information ul li {
 }
 
 .item {
-	font-family: Arial Black;
+	font-family: Roboto Condensed, Arial, sans-serif;
+	font-weight: 700;
 	font-size: 5.5mm;
 	line-height: 5mm;
 	margin-left: 3mm;
@@ -76,30 +88,34 @@ div.social_information ul li {
 }
 
 span {
-	line-height: 7mm;
+	line-height: 5.3mm;
 }
 
 .arial-black {
-	font-family: Arial Black;
+	font-family: Roboto Condensed, Arial, sans-serif;
+	font-weight: 700;
 }
 
 .trebuchet {
-	font-family: Trebuchet MS;
+	font-family: Roboto, Trebuchet MS;
 }
 
 .arial-rounded {
-	font-family: Arial Rounded MT Bold;
+	font-family: Roboto, Arial;
+	font-size: 4mm;
 }
 .trebuchet, .arial {
 	margin-left: 3mm;
+	font-size: 4mm;
 }
 
 .arial, .degree {
-	font-family: Arial;
+	font-family: Roboto, Arial;
+	font-size: 4mm;
 }
 
 .edu-fromto {
-	font-family: Trebuchet MS;
+	font-family: Roboto, Trebuchet MS;
 	float: right;
 	line-height: 21mm;
 	margin: 0 auto;
@@ -108,7 +124,7 @@ span {
 }
 
 .work-fromto {
-	font-family: Trebuchet MS;
+	font-family: Roboto, Trebuchet MS;
 	float: right;
 	line-height: 35mm;
 	margin: 0 auto;
