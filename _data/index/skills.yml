@@ -2,5 +2,5 @@
 
 label: Ability
 id : cs
-aspects: Science, Motivation, Sports, Programming, Travel, Explore, Learn
-percentage: 100, 85, 95, 70, 75, 90, 65
+aspects: Science, Motivation, Sports, Programming, Explore, Travel, Friends, Learn
+percentage: 100, 85, 95, 70, 90, 75, 80, 65
