@@ -38,16 +38,12 @@ author:  # change following line to your infomation.
   skill_icon1:
     - name: fa-university
     - name: fa-linux
-    - name: fa-slack
     - name: icon-shell
     - name: icon-python
-    - name: icon-google-developers
   skill_icon2:
     - name: fa-users
-    - name: fa-desktop
     - name: fa-bicycle
     - name: fa-soccer-ball-o
-    - name: fa-android
     - name: fa-rebel
   desc: Introduce myself will be here.  # Describe yourself.
 
