@@ -50,7 +50,7 @@
              o.addRepresentation( "hyperball", { sele: ":F", color: schemeId} );
              o.addRepresentation( "cartoon", {sele: ":F or :C"} );
              //add distances
-             var atomPair = [["18:A.OD1","20:A.N"],["18:A.ND2","232:A.O"]];
+             var atomPair = [["18:A.OD1","20:A.N"],["18:A.ND2","232:A.O"],["18:A.OD1","20:A.NE"]];
              o.addRepresentation("distance", {atomPair: atomPair, radius: 0.05, labelSize: 0, color: "black"});
              o.setRotation([0,0,0]);
              o.autoView("18:A.CG");
