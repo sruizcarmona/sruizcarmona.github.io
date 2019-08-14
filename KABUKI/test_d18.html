@@ -33,10 +33,15 @@
          backgroundColor: "white"
        });
        var schemeId = NGL.ColormakerRegistry.addSelectionScheme([
-            ["yellow", ":F and _C"],
-            ["blue", ":F and _N"],
-            ["red", ":F and _O"],
+            ["yellow", ":A and _C"],
+            ["blue", ":A and _N"],
+            ["red", ":A and _O"],
             ],"mut");
+      var schemeId_WT = NGL.ColormakerRegistry.addSelectionScheme([
+            ["green", ":A and _C"],
+            ["blue", ":A and _N"],
+            ["red", ":A and _O"],
+            ],"wt");
 //         stage.loadFile("4erq.cif", {defaultStructureRepresentation: true});
 //         stage.loadFile("4erq.cif").then(defaultStructureRepresentation);
          stage.loadFile("mut.pdb").then(function(o) {
@@ -47,8 +52,8 @@
              // expand selection to complete groups
              var atomSet2 = o.structure.getAtomSetWithinGroup( atomSet );
              o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString()} );
-             o.addRepresentation( "hyperball", { sele: ":F", color: schemeId} );
-             o.addRepresentation( "cartoon", {sele: ":F or :C"} );
+             o.addRepresentation( "hyperball", { sele: ":A", color: schemeId} );
+             o.addRepresentation( "cartoon", {sele: ":A or :A"} );
              //add distances
              var atomPair = [["18:A.OD1","20:A.N"],["18:A.ND2","232:A.O"],["18:A.OD1","20:A.NE"]];
              o.addRepresentation("distance", {atomPair: atomPair, radius: 0.05, labelSize: 0, color: "red"});
@@ -65,8 +70,8 @@
              // expand selection to complete groups
              var atomSet2 = o.structure.getAtomSetWithinGroup( atomSet );
              o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString()} );
-             o.addRepresentation( "hyperball", { sele: ":F", color: schemeId} );
-             o.addRepresentation( "cartoon", {sele: ":F or :C"} );
+             o.addRepresentation( "hyperball", { sele: ":A", color: schemeId} );
+             o.addRepresentation( "cartoon", {sele: ":A or :A"} );
              //add distances
              var atomPair = [["18:A.OD2","20:A.NH2"],["18:A.ND2","232:A.O"],["18:A.OD2","234:A.N"]];
              o.addRepresentation("distance", {atomPair: atomPair, radius: 0.05, labelSize: 0, color: "black"});
@@ -78,6 +83,6 @@
      });
    </script>
    <!--<div id="viewport" style="width:500px; height:400px;"></div> -->
-   <div id="viewport" style="width:50%; height:600px; margin: 0 auto;"></div> 
+   <div id="viewport" style="width:50%; height:400px; margin: 0 auto;"></div> 
  </body>
  </html>
