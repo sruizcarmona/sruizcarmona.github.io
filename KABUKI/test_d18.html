@@ -51,9 +51,9 @@
              var atomSet = o.structure.getAtomSetWithinSelection( selection, radius );
              // expand selection to complete groups
              var atomSet2 = o.structure.getAtomSetWithinGroup( atomSet );
-             o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString()} );
-             o.addRepresentation( "hyperball", { sele: ":A", color: schemeId} );
-             o.addRepresentation( "cartoon", {sele: ":A or :A"} );
+             o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString(), color: schemeId} );
+             //o.addRepresentation( "hyperball", { sele: ":A", color: schemeId} );
+             o.addRepresentation( "cartoon", {sele: ":A"} );
              //add distances
              var atomPair = [["18:A.OD1","20:A.N"],["18:A.ND2","232:A.O"],["18:A.OD1","20:A.NE"]];
              o.addRepresentation("distance", {atomPair: atomPair, radius: 0.05, labelSize: 0, color: "red"});
