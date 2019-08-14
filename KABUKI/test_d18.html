@@ -70,7 +70,7 @@
              // expand selection to complete groups
              var atomSet2 = o.structure.getAtomSetWithinGroup( atomSet );
              o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString()} );
-             o.addRepresentation( "hyperball", { sele: ":A", color: schemeId} );
+             o.addRepresentation( "hyperball", { sele: ":A", color: schemeId_WT} );
              o.addRepresentation( "cartoon", {sele: ":A or :A"} );
              //add distances
              var atomPair = [["18:A.OD2","20:A.NH2"],["18:A.ND2","232:A.O"],["18:A.OD2","234:A.N"]];
@@ -83,6 +83,6 @@
      });
    </script>
    <!--<div id="viewport" style="width:500px; height:400px;"></div> -->
-   <div id="viewport" style="width:50%; height:400px; margin: 0 auto;"></div> 
+   <div id="viewport" style="width:60%; height:400px; margin: 0 auto;"></div> 
  </body>
  </html>
