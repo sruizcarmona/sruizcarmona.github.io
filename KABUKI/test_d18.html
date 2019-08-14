@@ -57,6 +57,24 @@
              //o.addRepresentation("ball+stick", {colorScheme: "bfactor"});
              //o.autoView();     
        });
+      stage.loadFile("wt.pdb").then(function(o) {
+             // get all atoms within 5 Angstrom of resid 5340
+             var selection = new NGL.Selection("18:A");
+             var radius = 5;
+             var atomSet = o.structure.getAtomSetWithinSelection( selection, radius );
+             // expand selection to complete groups
+             var atomSet2 = o.structure.getAtomSetWithinGroup( atomSet );
+             o.addRepresentation( "hyperball", { sele: atomSet2.toSeleString()} );
+             o.addRepresentation( "hyperball", { sele: ":F", color: schemeId} );
+             o.addRepresentation( "cartoon", {sele: ":F or :C"} );
+             //add distances
+             var atomPair = [["18:A.OD2","20:A.NH2"],["18:A.ND2","232:A.O"],["18:A.OD2","234:A.N"]];
+             o.addRepresentation("distance", {atomPair: atomPair, radius: 0.05, labelSize: 0, color: "black"});
+             o.setRotation([0,0,0]);
+             o.autoView("18:A.CG");
+             //o.addRepresentation("ball+stick", {colorScheme: "bfactor"});
+             //o.autoView();     
+       });
      });
    </script>
    <!--<div id="viewport" style="width:500px; height:400px;"></div> -->
