@@ -26,7 +26,7 @@ author:  # change following line to your infomation.
   name: Sergio  # Be used at blog posts' author.
   first_name: Sergio  # Be used at index page about me section.
   last_name: Ruiz  # Be used at index page about me section.
-  last_name2: Carrmona  # Be used at index page about me section.
+  last_name2: Carmona  # Be used at index page about me section.
   avatar: /static/assets/img/landing/avatar.jpg  # upload your avatar at directory and edit it.
   github_username: sruizcarmona  # Leave blank if you don't have now
   linkedin_id:  # Leave blank if you don't have now
