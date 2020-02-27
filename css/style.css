@@ -181,7 +181,7 @@ h2 {
   position: relative;
   width: 100%;
   min-height: 490px;
-  background-color: #0b5611; }
+  background-color: #005012; }
   @media (min-width: 768px) {
     .container-info {
       float: left;
@@ -189,7 +189,7 @@ h2 {
       left: 0;
       top: 0;
       height: 100%;
-      width: 50%; } }
+      width: 45%; } }
 
 .container-main {
   display: inline-block;
@@ -201,7 +201,7 @@ h2 {
       top: 0;
       right: 0;
       height: 100%;
-      width: 45%;
+      width: 50%;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
       overflow-x: hidden; } }
@@ -225,7 +225,7 @@ h2 {
   width: 170px;
   height: 170px;
   border-radius: 250px;
-  box-shadow: 0 5px 10px #0b5884; }
+  box-shadow: 0 5px 10px #002F0A; }
 .info__tag {
   display: block;
   margin: 30px auto auto auto;
@@ -251,21 +251,21 @@ h2 {
 .info__elevator-link {
   padding: 0 4px 2px 4px;
   color: white;
-  border-bottom: 2px solid #A3C0FC;
+  border-bottom: 2px solid #EB7302;
   text-decoration: none;
   word-wrap: break-word;
   white-space: initial;
   transition: background-color 0.3s, border-color 0.3s; }
   .info__elevator-link:hover {
-    background-color: #0A4DD9;
-    border-color: #A3C0FC; }
+    background-color: #974e08ab;
+    border-color: #EB7302; }
 .info__button, .info__button--dark {
   display: block;
   position: relative;
   width: 200px;
   margin: 30px auto auto auto;
   padding: 11px 24px;
-  color: #1560FB;
+  color: #06721E;
   background: white;
   border-color: #1560FB;
   border-radius: 3px;
@@ -276,16 +276,16 @@ h2 {
   text-decoration: none; }
   .info__button:hover, .info__button--dark:hover {
     color: white;
-    background-color: #1560FB; }
+    background-color: #fb154a; }
   @media (min-width: 768px) {
     .info__button, .info__button--dark {
       margin: 40px auto auto auto; } }
   .info__button--dark {
     color: white;
-    background: #5bb4ef;
+    background: #06721e;
     border-color: white; }
     .info__button--dark:hover {
-      color: #1560FB;
+      color: #06721e;
       background-color: white; }
     @media (min-width: 768px) {
       .info__button--dark {
@@ -325,7 +325,7 @@ h2 {
     float: right;
     transition: 0.3s color ease; }
     .info-footer__social-icon:hover, .info-footer__social-icon--dribbble:hover, .info-footer__social-icon--linkedin:hover, .info-footer__social-icon--instagram:hover, .info-footer__social-icon--github:hover, .info-footer__social-icon--twitter:hover {
-      color: #A3C0FC; }
+      color: #974e08; }
     .info-footer__social-icon--dribbble {
       animation-delay: 1.2s; }
       @media (max-width: 768px) {
@@ -387,7 +387,7 @@ h2 {
       .main__container-resume {
         margin-bottom: 80px; } }
 .main__tag {
-  color: #0176bc; }
+  color: #005012; }
   @media (min-width: 1024px) {
     .main__tag {
       clear: both;
@@ -403,12 +403,12 @@ h2 {
       max-width: 500px; } }
   .main__copy a {
     padding: 0 4px 2px 4px;
-    border-bottom: 2px solid #A3C0FC;
+    border-bottom: 2px solid #EB7302;
     font-weight: 400;
     transition: background-color 0.3s, border-color 0.3s; }
     .main__copy a:hover {
-      background-color: #E9F0FF;
-      border-color: #1560FB; }
+      background-color: #974e084a;
+      border-color: #EB7302; }
 .main__project, .main__project--first {
   margin-bottom: 20px;
   width: 75%; }
@@ -431,6 +431,7 @@ h2 {
       bottom: 0.2ex;
       margin-left: 20px;
       content: "";
+      color: #005012;
       color: #0176bc;
       font-family: "FontAwesome";
       font-size: 12px; }
@@ -488,3 +489,26 @@ h2 {
       margin-left: 110px; } }
   .main__resume:hover a {
     opacity: 0.6; }
+
+/*    colors */
+/*
+color: #313131; --> headers in text, color OK
+background-color: #0b5611; } --> main color left, changed to 005012
+box-shadow: 0 5px 10px #0b5884; } --> pic shadow, changed to 002F0A
+border-bottom: 2px solid #A3C0FC; --> underline on main text, to EB7302
+background-color: #0A4DD9; --> hover color main text, to 974e08ab
+border-color: #A3C0FC; } --> underline, keep same as above, EB7302
+color: #1560FB; --> DK
+border-color: #1560FB; --> DK
+background-color: #1560FB; } --> DK
+indfo-button-dark
+background: #5bb4ef; --> DKO
+color: #1560FB; --> contact me button, to #06721e
+color: #A3C0FC; } --> hover icons color, to #974e08
+MAIN TEXT COLOR HEADER
+color: #0176bc; } --> main text color header, to 005012
+border-bottom: 2px solid #A3C0FC; --> underline in text right, to EB7302
+background-color: #E9F0FF; --> hover color links in text, to 974e084a
+border-color: #1560FB; } --> underline hover, same as not hover EB7302
+color: #0176bc; --> arrow color, to 005012
+color: #1560FB;  --> DK */
