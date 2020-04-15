@@ -1,0 +1,335 @@
+---
+title: "COVID-19 in Victoria"
+output: 
+  html_document:
+    # toc: true
+    # toc_depth: 3
+    # toc_float: 
+      # collapsed: false
+      # smooth_scroll: true
+    theme: cosmo
+    # df_print: paged
+    highlight: tango
+    code_folding: "none"
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
+---
+
+<!-- <script> -->
+<!-- $(document).ready(function() { -->
+<!--   $items = $('div#TOC li'); -->
+<!--   $items.each(function(idx) { -->
+<!--     num_ul = $(this).parentsUntil('#TOC').length; -->
+<!--     $(this).css({'text-indent': num_ul * 10, 'padding-left': 0}); -->
+<!--   }); -->
+
+<!-- }); -->
+<!-- </script> -->
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE, results='hide',message=FALSE,warning=FALSE)
+# rmarkdown::render(input='covid_plots.Rmd', output_file = "index.html")
+```
+
+<!-- # Covid Plots -->
+
+
+```{r }
+# library(ggplot2)
+library(tidyverse)
+library(RCurl)
+```
+
+```{r}
+# https://stackoverflow.com/questions/18332463/convert-written-number-to-number-in-r
+word2num <- function(word){
+    wsplit <- strsplit(tolower(word)," ")[[1]]
+    one_digits <- list(zero=0, one=1, two=2, three=3, four=4, five=5,
+                       six=6, seven=7, eight=8, nine=9)
+    teens <- list(eleven=11, twelve=12, thirteen=13, fourteen=14, fifteen=15,
+                  sixteen=16, seventeen=17, eighteen=18, nineteen=19)
+    ten_digits <- list(ten=10, twenty=20, thirty=30, forty=40, fifty=50,
+                       sixty=60, seventy=70, eighty=80, ninety=90)
+    doubles <- c(teens,ten_digits)
+    out <- 0
+    i <- 1
+    while(i <= length(wsplit)){
+        j <- 1
+        if(i==1 && wsplit[i]=="hundred")
+            temp <- 100
+        else if(i==1 && wsplit[i]=="thousand")
+            temp <- 1000
+        else if(wsplit[i] %in% names(one_digits))
+            temp <- as.numeric(one_digits[wsplit[i]])
+        else if(wsplit[i] %in% names(teens))
+            temp <- as.numeric(teens[wsplit[i]])
+        else if(wsplit[i] %in% names(ten_digits))
+            temp <- (as.numeric(ten_digits[wsplit[i]]))
+        if (!exists("temp")) {
+          return(NA)
+        }
+        if(i < length(wsplit) && wsplit[i+1]=="hundred"){
+            if(i>1 && wsplit[i-1] %in% c("hundred","thousand"))
+                out <- out + 100*temp
+            else
+                out <- 100*(out + temp)
+            j <- 2
+        }
+        else if(i < length(wsplit) && wsplit[i+1]=="thousand"){
+            if(i>1 && wsplit[i-1] %in% c("hundred","thousand"))
+                out <- out + 1000*temp
+            else
+                out <- 1000*(out + temp)
+            j <- 2
+        }
+        else if(i < length(wsplit) && wsplit[i+1] %in% names(doubles)){
+            temp <- temp*100
+            out <- out + temp
+        }
+        else{
+            out <- out + temp
+        }
+        i <- i + j
+    }
+    # return(list(word,out))
+    return(out)
+}
+# word2num("four fifty seven")
+# word2num("three")[[2]]
+```
+
+```{r}
+# numbers only
+numbers_only <- function(x) grepl("^[0-9]+([,.])?$", x)
+# clean HTML
+cleanHTML <- function(htmlString) {
+  htmlString <- gsub(".&nbsp;", "", htmlString, fixed =TRUE)
+  htmlString <- gsub("\\.<.*?>", "", htmlString)
+  return(gsub("<.*?>", "", htmlString))
+  }
+```
+
+
+```{r}
+fix_old_reports <- function(cdata){
+  cdata[1,is.na(cdata[1,])] <- c(355,6,0,97)
+  cdata[2,c(4,7)] <- c(411,113)
+  cdata[3,7] <- 128
+  cdata[4,c(4,7)] <- c(520,149)
+  cdata[8,c(6,7)] <- c(4,248)
+  cdata$deaths[c(14,16)] <- c(8,11)
+  # 7 april break of line for transmission
+  cdata$community[16] <- 93
+  return(cdata)
+}
+```
+
+```{r}
+get_dhhs_url <- function(day,month){
+  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
+  dhhs.url <- gsub(" ","",dhhs.url)
+  if (!url.exists(dhhs.url)) {
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+  }
+  if (!url.exists(dhhs.url)){
+    return(FALSE)
+  }
+  return (dhhs.url)
+}
+```
+
+
+```{r}
+#function to get cases per day
+get_cases_from_url <- function(day,month,item){
+  dhhs.url <- get_dhhs_url(day,month)
+  con <- url(dhhs.url)
+  htmlcode <- readLines(con)
+  close.connection(con)
+  if (item == 'html') {
+    return (htmlcode)
+  }
+  if (item == 'cases'){
+    cases_match <- str_subset(htmlcode,"total number of coronavirus")
+    cases <- as.numeric(str_replace(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is "))[2]," "))[1],",",""))
+    return(cases)
+  }
+  if (item == 'patients'){
+    pat_match <- str_subset(htmlcode,"patients in intensive care")
+    pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"Currently"))))
+    pat_parsed <- unlist(str_split(pat_clean[!str_detect(pat_clean,"community")]," "))
+    patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
+    if (length(patients) == 2){
+      patients <- c(patients[1],word2num(pat_parsed[which (pat_parsed == 'including') +1]),patients[2])
+    }
+    return(patients[c(1:3)])
+  }
+  #check deaths (lots of differences on the first reports) will try to take all of them
+  if (item == 'deaths'){
+    # fix covid19 so it doesnt account as a number
+    # htmlcode <- gsub("COVID-19","COVID",htmlcode)
+    max_deaths <- 30 #to check death numbers are not artifacts
+    # check word died
+    death_match <- str_subset(htmlcode,"died")
+    # clean html tags
+    death_match <- cleanHTML(death_match)
+    # split everything on words
+    death_clean <- unlist(str_split(death_match," "))
+    death_clean <- death_clean[!death_clean == ""]
+    # check if there are numbers on the splitted items
+    death_n <- as.numeric(death_clean[numbers_only(death_clean)])
+    # double check if the numbers are more than 5 times of previous day, as it is an artifact, then
+    if (all(death_n[!is.na(death_n)] > max_deaths)) {
+      death_n <- NULL
+    }
+    # if not, check if some of the words are numbers in letters
+    if (length(death_n) == 0){
+      death_n <- as.numeric(unlist(lapply(death_clean,word2num)))
+    }
+    deaths <- death_n[!is.na(death_n)][1]
+    # if still, there is no option, change the key word to death and repeat the same
+    if (length(death_match) == 0 || length(death_n[!is.na(death_n)]) == 0) {
+        death_match <- str_subset(htmlcode,"death")
+        # clean html tags
+        death_match <- cleanHTML(death_match)
+        # there are different matches, normally. check one by one
+        for (death_match_i in death_match) {
+          # split and remove empty spaces in the beginning
+          death_clean <- unlist(str_split(death_match_i," "))
+          death_clean <- death_clean[!death_clean == ""]
+          # check if numbers
+          death_n <- as.numeric(death_clean[numbers_only(death_clean)])
+          # death_n <- as.numeric(unlist(regmatches(death_clean, gregexpr("[[:digit:]]+", death_clean))))
+          # double check if the numbers are more than 5 times of previous day, as it is an artifact, then
+          if (all(death_n[!is.na(death_n)] > max_deaths)) {
+            death_n <- NULL
+          }
+          if (length(death_n) == 0){
+            death_n <- as.numeric(unlist(lapply(death_clean,word2num)))
+            if (length(death_n[!is.na(death_n)]) != 0){
+              break
+            }
+          }
+        }
+      deaths <- death_n[!is.na(death_n)][1]
+    }
+    # if it still persists, it means there are no deaths
+    if (length(death_match)==0) {
+      deaths <- 0
+      return(deaths)
+    }
+    return(deaths)
+  }
+  if (item == 'community'){
+    # check word died
+    comm_match <- str_subset(htmlcode,"transmission")
+    # clean html tags
+    comm_match <- cleanHTML(comm_match)
+    # split everything on words
+    comm_clean <- unlist(str_split(comm_match,"transmission. "))[1]
+    comm_clean <- unlist(str_split(comm_clean," "))
+    comm_clean <- comm_clean[!comm_clean == ""]
+    # check if there are numbers on the splitted items
+    comm_n <- as.numeric(comm_clean[numbers_only(comm_clean)])
+    # check if no results, and get word2num
+    if (length(comm_n) == 0){
+      comm_n <- as.numeric(unlist(lapply(comm_clean,word2num)))
+    }
+    comm <- comm_n[!is.na(comm_n)][1]
+    return(comm)
+  }
+}
+```
+
+```{r}
+# for (d in days_to_plot[4]){
+#   d <- unlist(str_split(d," "))
+#   htmlcode<- get_cases_from_url(d[2],d[1],"html")
+#   k <- unlist(str_split(str_subset(htmlcode,"died")," "))
+#   print(unlist(regmatches(k, gregexpr("[[:digit:]]+",k))))
+# }
+# htmlcode <- get_cases_from_url(23,'march','html')
+# get_cases_from_url(27,'march','community')
+# get_cases_from_url(1,'april','community')
+# get_cases_from_url(7,'april','community')
+# get_cases_from_url(14,'april','community')
+```
+
+
+<!-- ## initialize matrix with dates to calculate -->
+
+```{r}
+startdate <- as.Date("2020-03-23")
+enddate <- as.Date(Sys.Date())
+today <- unlist(str_split(tolower(gsub(" 0", " ",format(enddate, format="%B %d")))," "))
+#get end date
+if (get_dhhs_url(today[2],today[1])==FALSE){enddate <- enddate - 1}
+sel_dates <- seq(startdate, enddate, by="days")
+days_to_plot <- tolower(gsub(" 0", " ",format(sel_dates, format="%B %d")))
+covid_data <- as.data.frame(do.call(rbind, str_split(days_to_plot," ")),stringsAsFactors =FALSE)
+covid_data <- cbind(covid_data,sel_dates)
+colnames(covid_data) <- c("month","day","date")
+covid_data$cases <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="cases"))
+covid_data <- cbind(covid_data,setNames(data.frame(t(apply(covid_data,1,
+                             function(x) get_cases_from_url(x['day'],x['month'],item="patients")))),
+                             c("hospital","icu","recovered")))
+covid_data$deaths <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="deaths"))
+covid_data$community <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="community"))
+covid_data <- fix_old_reports(covid_data)
+# covid_data
+```
+
+
+```{r}
+covid_data <- covid_data %>%
+  mutate(
+    active = cases - recovered,
+    recovered_perc = round(recovered / cases * 100,1),
+    community_perc_total = round(community / cases * 100,1),
+    cases_new = c(0,diff(cases)),
+    community_new = c(0,diff(community)),
+    community_perc_new = round(community_new / cases_new * 100,1),
+  )
+# covid_data
+```
+
+```{r}
+# apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="patients"))
+```
+
+
+```{r}
+corr <- 10
+ggplot(covid_data,aes(x=date)) +
+  geom_line(aes(y=cases,color="Cases")) +
+  geom_line(aes(y=active,color = 'Active')) +
+  geom_line(aes(y=hospital*corr,color = 'Hospital')) +
+  geom_line(aes(y=icu*corr,color = 'ICU')) +
+  geom_line(aes(y=recovered,color = 'Recovered')) +
+  geom_line(aes(y=deaths*corr,color = 'Deaths')) +
+  geom_line(aes(y=community*corr,color = 'Community')) +
+  geom_line(aes(y=community_perc_new*corr,color = 'Community (% new cases)')) +
+  scale_x_date(date_breaks = "1 day", date_labels = "%b %d") + 
+  # ylim(c(0,1500)) +
+  scale_y_continuous(sec.axis = sec_axis(~./corr, name = "Hospital / ICU / Deaths \n Community / New Community (%)"),
+                      breaks = seq(0, 1500, by = 300),limits = c(0,1500)) +
+  # xlim (c(as.Date("2020-03-23"),as.Date("2020-04-14"))) +
+  labs(y = "New / Active / Recovered Cases (#)",
+                x = "Day",
+                colour = "") +
+  theme_bw() +
+  # ggtitle("COVID-19 in Victoria") +
+  scale_colour_manual(values = c("black", "red","blue","brown","green","purple","orange","orange2")) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "bottom",
+        # plot.margin = margin(t=0.2, b=0.2, l=0.5, r=0.5, "cm"),
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 0, b = 0, l = 10)))
+```
+
+
+
+
+```{r}
+# for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep 'The total number of coronavirus' |  grep -v field | grep -v lang | awk '{print $13}' | sed 's/,//'; done
+# for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep patients | grep -v GP; done
+```
+
