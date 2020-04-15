@@ -95,3 +95,8 @@ output file: covid_plots.knit.md
 Output created: index.html
 Warning message:
 Removed 1 row(s) containing missing values (geom_path). 
+[master 36f6c0b] covidplots update
+ 1 file changed, 97 insertions(+), 5 deletions(-)
+ rewrite covid/crontab.log (100%)
+To https://github.com/sruizcarmona/sruizcarmona.github.io.git
+   2695baf..36f6c0b  master -> master
