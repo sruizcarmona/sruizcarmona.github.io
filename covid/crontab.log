@@ -95,3 +95,6 @@ output file: covid_plots.knit.md
 Output created: index.html
 Warning message:
 Removed 1 row(s) containing missing values (geom_path). 
+[master 051bce3] covidplots update
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+fatal: could not read Username for 'https://github.com': Device not configured
