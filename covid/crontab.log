@@ -90,7 +90,7 @@ label: unnamed-chunk-13
 
 output file: covid_plots.knit.md
 
-/Users/sruizcarmona/miniconda3/envs/rstudio/bin/pandoc +RTS -K512m -RTS covid_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output index.html --email-obfuscation none --self-contained --standalone --section-divs --template /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style tango --variable 'theme:cosmo' --include-in-header /tmp/RtmpWekmuw/rmarkdown-str11e592399d7c5.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/latex-div.lua 
+/Users/sruizcarmona/miniconda3/envs/rstudio/bin/pandoc +RTS -K512m -RTS covid_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output index.html --email-obfuscation none --self-contained --standalone --section-divs --template /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style tango --variable 'theme:cosmo' --include-in-header /tmp/RtmpicPfP1/rmarkdown-str121f32258716.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/latex-div.lua 
 
 Output created: index.html
 Warning message:
