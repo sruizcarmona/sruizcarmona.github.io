@@ -119,6 +119,9 @@ fix_old_reports <- function(cdata){
   cdata$deaths[c(14,16)] <- c(8,11)
   # 7 april break of line for transmission
   cdata$community[16] <- 93
+  # 16 april no web report (I did 13 just to run the code)
+  cdata[25,c(1:3)] <- c("april","16","2020-04-16")
+  cdata[25,c(4:9)]<- c(1301,39,18,1137,14,132)
   return(cdata)
 }
 ```
@@ -264,6 +267,8 @@ today <- unlist(str_split(tolower(gsub(" 0", " ",format(enddate, format="%B %d")
 #get end date
 if (get_dhhs_url(today[2],today[1])==FALSE){enddate <- enddate - 1}
 sel_dates <- seq(startdate, enddate, by="days")
+#fix for 16 april
+sel_dates[sel_dates == "2020-04-16"] <- as.Date("2020-04-13")
 days_to_plot <- tolower(gsub(" 0", " ",format(sel_dates, format="%B %d")))
 covid_data <- as.data.frame(do.call(rbind, str_split(days_to_plot," ")),stringsAsFactors =FALSE)
 covid_data <- cbind(covid_data,sel_dates)
