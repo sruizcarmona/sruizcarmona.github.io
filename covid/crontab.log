@@ -64,34 +64,8 @@ label: unnamed-chunk-8
 
   |                                                                              |...............................................                       |  67%
 label: unnamed-chunk-9
-  |                                                                              |.................................................                     |  70%
-  ordinary text without R code
+Quitting from lines 261-279 (covid_plots.Rmd) 
+Error in url(dhhs.url) : invalid 'description' argument
+Calls: <Anonymous> ... eval -> eval -> apply -> FUN -> get_cases_from_url -> url
 
-  |                                                                              |....................................................                  |  74%
-label: unnamed-chunk-10
-  |                                                                              |......................................................                |  78%
-  ordinary text without R code
-
-  |                                                                              |.........................................................             |  81%
-label: unnamed-chunk-11
-  |                                                                              |............................................................          |  85%
-  ordinary text without R code
-
-  |                                                                              |..............................................................        |  89%
-label: unnamed-chunk-12
-  |                                                                              |.................................................................     |  93%
-  ordinary text without R code
-
-  |                                                                              |...................................................................   |  96%
-label: unnamed-chunk-13
-  |                                                                              |......................................................................| 100%
-  ordinary text without R code
-
-
-output file: covid_plots.knit.md
-
-/Users/sruizcarmona/miniconda3/envs/rstudio/bin/pandoc +RTS -K512m -RTS covid_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output index.html --email-obfuscation none --self-contained --standalone --section-divs --template /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style tango --variable 'theme:cosmo' --include-in-header /tmp/RtmpTtdZuH/rmarkdown-str12cfa51e510f2.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/latex-div.lua 
-
-Output created: index.html
-Warning message:
-Removed 1 row(s) containing missing values (geom_path). 
+Execution halted
