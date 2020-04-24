@@ -303,7 +303,7 @@ covid_data <- covid_data %>%
 ```
 
 
-```{r}
+```{r echo=F}
 corr <- 10
 p <- ggplot(covid_data,aes(x=date)) +
   geom_line(aes(y=cases,color="Cases")) +

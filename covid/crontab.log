@@ -4,7 +4,7 @@ processing file: covid_plots.Rmd
   |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
   ordinary text without R code
 
-  |                                                                              |.....                                                                 |   6%
+  |                                                                              |.....                                                                 |   7%
 label: unnamed-chunk-1 (with options) 
 List of 1
  $ include: logi FALSE
@@ -44,69 +44,69 @@ The following object is masked from 'package:graphics':
 
     layout
 
-  |                                                                              |...........                                                           |  16%
+  |                                                                              |............                                                          |  17%
   ordinary text without R code
 
-  |                                                                              |..............                                                        |  19%
+  |                                                                              |..............                                                        |  20%
 label: unnamed-chunk-3
   |                                                                              |................                                                      |  23%
   ordinary text without R code
 
-  |                                                                              |..................                                                    |  26%
+  |                                                                              |...................                                                   |  27%
 label: unnamed-chunk-4
-  |                                                                              |....................                                                  |  29%
+  |                                                                              |.....................                                                 |  30%
   ordinary text without R code
 
-  |                                                                              |.......................                                               |  32%
+  |                                                                              |.......................                                               |  33%
 label: unnamed-chunk-5
-  |                                                                              |.........................                                             |  35%
+  |                                                                              |..........................                                            |  37%
   ordinary text without R code
 
-  |                                                                              |...........................                                           |  39%
+  |                                                                              |............................                                          |  40%
 label: unnamed-chunk-6
-  |                                                                              |.............................                                         |  42%
+  |                                                                              |..............................                                        |  43%
   ordinary text without R code
 
-  |                                                                              |................................                                      |  45%
+  |                                                                              |.................................                                     |  47%
 label: unnamed-chunk-7
-  |                                                                              |..................................                                    |  48%
+  |                                                                              |...................................                                   |  50%
   ordinary text without R code
 
-  |                                                                              |....................................                                  |  52%
+  |                                                                              |.....................................                                 |  53%
 label: unnamed-chunk-8
-  |                                                                              |......................................                                |  55%
+  |                                                                              |........................................                              |  57%
   ordinary text without R code
 
-  |                                                                              |.........................................                             |  58%
+  |                                                                              |..........................................                            |  60%
 label: unnamed-chunk-9
-  |                                                                              |...........................................                           |  61%
+  |                                                                              |............................................                          |  63%
   ordinary text without R code
 
-  |                                                                              |.............................................                         |  65%
+  |                                                                              |...............................................                       |  67%
 label: unnamed-chunk-10
-  |                                                                              |...............................................                       |  68%
+  |                                                                              |.................................................                     |  70%
   ordinary text without R code
 
-  |                                                                              |..................................................                    |  71%
+  |                                                                              |...................................................                   |  73%
 label: unnamed-chunk-11
-  |                                                                              |....................................................                  |  74%
-  ordinary text without R code
-
   |                                                                              |......................................................                |  77%
-label: unnamed-chunk-12
-  |                                                                              |........................................................              |  81%
   ordinary text without R code
 
-  |                                                                              |...........................................................           |  84%
-label: unnamed-chunk-13
+  |                                                                              |........................................................              |  80%
+label: unnamed-chunk-12 (with options) 
+List of 1
+ $ echo: symbol F
+
+  |                                                                              |..........................................................            |  83%
+  ordinary text without R code
+
   |                                                                              |.............................................................         |  87%
-  ordinary text without R code
-
+label: unnamed-chunk-13
   |                                                                              |...............................................................       |  90%
-label: unnamed-chunk-14
-  |                                                                              |.................................................................     |  94%
   ordinary text without R code
 
+  |                                                                              |.................................................................     |  93%
+label: unnamed-chunk-14
   |                                                                              |....................................................................  |  97%
 label: unnamed-chunk-15
   |                                                                              |......................................................................| 100%
@@ -115,10 +115,6 @@ label: unnamed-chunk-15
 
 output file: covid_plots.knit.md
 
-/Users/sruizcarmona/miniconda3/envs/rstudio/bin/pandoc +RTS -K512m -RTS covid_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output index.html --email-obfuscation none --self-contained --standalone --section-divs --template /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style tango --variable 'theme:cosmo' --include-in-header /tmp/RtmpGz1CCS/rmarkdown-str133d570612f71.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/latex-div.lua 
+/Users/sruizcarmona/miniconda3/envs/rstudio/bin/pandoc +RTS -K512m -RTS covid_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output index.html --email-obfuscation none --self-contained --standalone --section-divs --template /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style tango --variable 'theme:cosmo' --include-in-header /tmp/Rtmpau2GwM/rmarkdown-str1406134ea8dd9.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/sruizcarmona/miniconda3/envs/rstudio/lib/R/library/rmarkdown/rmd/lua/latex-div.lua 
 
 Output created: index.html
-[master 9a7fe7f] covidplots update
- 3 files changed, 103 insertions(+), 39 deletions(-)
-To https://github.com/sruizcarmona/sruizcarmona.github.io.git
-   12404ca..9a7fe7f  master -> master
