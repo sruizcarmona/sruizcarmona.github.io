@@ -38,6 +38,7 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE,warning=FALSE)
 library(tidyverse)
 library(RCurl)
 library(plotly)
+library(RColorBrewer)
 ```
 
 ```{r}
@@ -345,13 +346,16 @@ p <- ggplot(covid_data,aes(x=date)) +
 
 ```{r}
 mycols <- c("black", "red","green","blue","orange","purple")
+mycols <- c('black','#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3')
+mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'))
 fig <- plot_ly(data = covid_data, x = ~date, y = ~cases, name = 'Cases', type = 'scatter', mode = 'lines',
                line = list(color = mycols[1]))
-fig <- fig %>% add_trace(y = ~active, name = 'Active', mode = 'lines',line = list(color = mycols[2]))
-fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered', mode = 'lines',line = list(color = mycols[3]))
+fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered', mode = 'lines',line = list(color = mycols[2]))
+fig <- fig %>% add_trace(y = ~active, name = 'Active', mode = 'lines',line = list(color = mycols[3]))
 fig <- fig %>% add_trace(y = ~community, name = 'Community', mode = 'lines',yaxis = 'y2',line = list(color = mycols[4]))
 fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital', mode = 'lines',yaxis = 'y2',line = list(color = mycols[5]))
-fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
+fig <- fig %>% add_trace(y = ~icu, name = 'ICU', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
+fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60, type='date', tickformat= '%b %e',
                                    range = ~date, autotick=F),
