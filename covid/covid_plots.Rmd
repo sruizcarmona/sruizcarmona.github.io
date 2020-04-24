@@ -37,6 +37,7 @@ knitr::opts_chunk$set(echo=FALSE, results='hide',message=FALSE,warning=FALSE)
 # library(ggplot2)
 library(tidyverse)
 library(RCurl)
+library(plotly)
 ```
 
 ```{r}
@@ -143,7 +144,7 @@ get_dhhs_url <- function(day,month){
 
 ```{r}
 #function to get cases per day
-get_cases_from_url <- function(day,month,item){
+get_data_from_url <- function(day,month,item){
   dhhs.url <- get_dhhs_url(day,month)
   con <- url(dhhs.url)
   htmlcode <- readLines(con)
@@ -224,7 +225,7 @@ get_cases_from_url <- function(day,month,item){
   }
   if (item == 'community'){
     # check word died
-    comm_match <- str_subset(htmlcode,"transmission")
+    comm_match <- str_subset(str_subset(htmlcode,"transmission"),"community")
     # clean html tags
     comm_match <- cleanHTML(comm_match)
     # split everything on words
@@ -273,12 +274,12 @@ days_to_plot <- tolower(gsub(" 0", " ",format(sel_dates, format="%B %d")))
 covid_data <- as.data.frame(do.call(rbind, str_split(days_to_plot," ")),stringsAsFactors =FALSE)
 covid_data <- cbind(covid_data,sel_dates)
 colnames(covid_data) <- c("month","day","date")
-covid_data$cases <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="cases"))
+covid_data$cases <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="cases"))
 covid_data <- cbind(covid_data,setNames(data.frame(t(apply(covid_data,1,
-                             function(x) get_cases_from_url(x['day'],x['month'],item="patients")))),
+                             function(x) get_data_from_url(x['day'],x['month'],item="patients")))),
                              c("hospital","icu","recovered")))
-covid_data$deaths <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="deaths"))
-covid_data$community <- apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="community"))
+covid_data$deaths <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="deaths"))
+covid_data$community <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="community"))
 covid_data <- fix_old_reports(covid_data)
 # covid_data
 ```
@@ -312,22 +313,25 @@ ggplot(covid_data,aes(x=date)) +
   geom_line(aes(y=recovered,color = 'Recovered')) +
   geom_line(aes(y=deaths*corr,color = 'Deaths')) +
   geom_line(aes(y=community*corr,color = 'Community')) +
-  geom_line(aes(y=community_perc_new*corr,color = 'Community (% new cases)')) +
-  scale_x_date(date_breaks = "1 day", date_labels = "%b %d") + 
+  # geom_line(aes(y=community_perc_new*corr,color = 'Community (% new cases)')) +
+  scale_x_date(date_breaks = "2 day", date_labels = "%b %d") + 
   # ylim(c(0,1500)) +
-  scale_y_continuous(sec.axis = sec_axis(~./corr, name = "Hospital / ICU / Deaths \n Community / New Community (%)"),
-                      breaks = seq(0, 1500, by = 300),limits = c(0,1500)) +
+  scale_y_continuous(sec.axis = sec_axis(~./corr, name = "Hospital / ICU \n Deaths / Community (# people)",
+                                         breaks = seq(0, 150, by = 30)),
+                     breaks = seq(0, 1500, by = 300),limits = c(0,1500)) +
   # xlim (c(as.Date("2020-03-23"),as.Date("2020-04-14"))) +
-  labs(y = "New / Active / Recovered Cases (#)",
-                x = "Day",
-                colour = "") +
+  labs(y = "Total / Active / Recovered Cases (#)",
+       x = "Day",
+       colour = "") +
   theme_bw() +
   # ggtitle("COVID-19 in Victoria") +
-  scale_colour_manual(values = c("black", "red","blue","brown","green","purple","orange","orange2")) +
+  scale_colour_manual(values = c("black", "red","blue","brown","green","purple","orange2")) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         legend.position = "bottom",
         # plot.margin = margin(t=0.2, b=0.2, l=0.5, r=0.5, "cm"),
-        axis.title.y.right = element_text(margin = margin(t = 0, r = 0, b = 0, l = 10)))
+        axis.title.y.right = element_text(margin = margin(t = 0, r = 0, b = 0, l = 10)),
+        panel.grid.minor.x = element_blank(),
+        panel.grid = element_line(size=0.04,colour="black"))
 ```
 
 
@@ -336,5 +340,17 @@ ggplot(covid_data,aes(x=date)) +
 ```{r}
 # for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep 'The total number of coronavirus' |  grep -v field | grep -v lang | awk '{print $13}' | sed 's/,//'; done
 # for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep patients | grep -v GP; done
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+fig <- plot_ly(data = covid_data, x = ~date, y = ~cases, name = 'Cases', type = 'scatter', mode = 'lines')
+fig <- fig %>% add_trace(y = ~active, name = 'Active', mode = 'lines+markers')
+fig
 ```
 
