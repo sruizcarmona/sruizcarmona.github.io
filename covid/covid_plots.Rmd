@@ -364,7 +364,7 @@ fig <- fig %>% layout(title = '',
 fig
 ```
 ```{r}
-f <- ggplotly(p)
-f
+# f <- ggplotly(p)
+# f
 ```
 
