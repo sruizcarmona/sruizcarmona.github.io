@@ -263,26 +263,55 @@ get_data_from_url <- function(day,month,item){
 <!-- ## initialize matrix with dates to calculate -->
 
 ```{r}
-startdate <- as.Date("2020-03-23")
-enddate <- as.Date(Sys.Date())
-today <- unlist(str_split(tolower(gsub(" 0", " ",format(enddate, format="%B %d")))," "))
-#get end date
-if (get_dhhs_url(today[2],today[1])==FALSE){enddate <- enddate - 1}
-sel_dates <- seq(startdate, enddate, by="days")
-#fix for 16 april
-sel_dates[sel_dates == "2020-04-16"] <- as.Date("2020-04-13")
-days_to_plot <- tolower(gsub(" 0", " ",format(sel_dates, format="%B %d")))
-covid_data <- as.data.frame(do.call(rbind, str_split(days_to_plot," ")),stringsAsFactors =FALSE)
-covid_data <- cbind(covid_data,sel_dates)
-colnames(covid_data) <- c("month","day","date")
-covid_data$cases <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="cases"))
-covid_data <- cbind(covid_data,setNames(data.frame(t(apply(covid_data,1,
-                             function(x) get_data_from_url(x['day'],x['month'],item="patients")))),
-                             c("hospital","icu","recovered")))
-covid_data$deaths <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="deaths"))
-covid_data$community <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="community"))
-covid_data <- fix_old_reports(covid_data)
-# covid_data
+# # initialize covid_data as of 27/04 and save it as covid_data.rda
+# startdate <- as.Date("2020-03-23")
+# enddate <- as.Date(Sys.Date())
+# today <- unlist(str_split(tolower(gsub(" 0", " ",format(enddate, format="%B %d")))," "))
+# #get end date
+# if (get_dhhs_url(today[2],today[1])==FALSE){enddate <- enddate - 1}
+# sel_dates <- seq(startdate, enddate, by="days")
+# #fix for 16 april
+# sel_dates[sel_dates == "2020-04-16"] <- as.Date("2020-04-13")
+# days_to_plot <- tolower(gsub(" 0", " ",format(sel_dates, format="%B %d")))
+# covid_data <- as.data.frame(do.call(rbind, str_split(days_to_plot," ")),stringsAsFactors =FALSE)
+# covid_data <- cbind(covid_data,sel_dates)
+# colnames(covid_data) <- c("month","day","date")
+# covid_data$cases <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="cases"))
+# covid_data <- cbind(covid_data,setNames(data.frame(t(apply(covid_data,1,
+#                              function(x) get_data_from_url(x['day'],x['month'],item="patients")))),
+#                              c("hospital","icu","recovered")))
+# covid_data$deaths <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="deaths"))
+# covid_data$community <- apply(covid_data,1,function(x) get_data_from_url(x['day'],x['month'],item="community"))
+# covid_data <- fix_old_reports(covid_data)
+# save(covid_data, file = "covid_data.rda")
+# # covid_data
+```
+
+```{r}
+# new process
+# check if today's link exists
+# load covid_data.rda
+# check if today has already been computed in covid_data
+# run today and append it to covid_data
+# save covid_data
+
+today.raw <- as.Date(Sys.Date())
+today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
+
+if (get_dhhs_url(today[2],today[1])!=FALSE){
+  load("covid_data.rda")
+  # if there is no today.raw in calculated dates, then update
+  if (!any(covid_data$date == today.raw)){
+    update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
+    update.covid$date <- today.raw
+    update.covid$cases <- get_data_from_url(update.covid$day, update.covid$month,item='cases')
+    update.covid <- cbind(update.covid,setNames(data.frame(t(get_data_from_url(update.covid$day, update.covid$month,item='patients'))),c("hospital","icu","recovered")))
+    update.covid$deaths <- get_data_from_url(update.covid$day, update.covid$month,item='deaths')
+    update.covid$community <- get_data_from_url(update.covid$day, update.covid$month,item='community')
+    covid_data <- cbind(covid_data,update.covid)
+    save(covid_data, file = "covid_data.rda")
+  }
+}
 ```
 
 
