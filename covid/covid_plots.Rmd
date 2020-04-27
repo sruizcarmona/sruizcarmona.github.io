@@ -30,6 +30,15 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE,warning=FALSE)
 # rmarkdown::render(input='covid_plots.Rmd', output_file = "index.html")
 ```
 
+```{r results='asis'}
+## SUBTITLE
+update.date <- format(Sys.Date(), format="%A, %B %e at")
+update.time <- format(Sys.time(), format="%H:%M")
+update.text <- paste("#### Last updated on",update.date,update.time)
+cat(update.text)
+```
+
+
 <!-- # Covid Plots -->
 
 
@@ -288,29 +297,26 @@ get_data_from_url <- function(day,month,item){
 ```
 
 ```{r}
-# new process
-# check if today's link exists
+# new process:
 # load covid_data.rda
+# check if today's link exists
 # check if today has already been computed in covid_data
 # run today and append it to covid_data
 # save covid_data
 
+load("covid_data.rda")
 today.raw <- as.Date(Sys.Date())
 today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
 
-if (get_dhhs_url(today[2],today[1])!=FALSE){
-  load("covid_data.rda")
-  # if there is no today.raw in calculated dates, then update
-  if (!any(covid_data$date == today.raw)){
+if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)){
     update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
     update.covid$date <- today.raw
     update.covid$cases <- get_data_from_url(update.covid$day, update.covid$month,item='cases')
     update.covid <- cbind(update.covid,setNames(data.frame(t(get_data_from_url(update.covid$day, update.covid$month,item='patients'))),c("hospital","icu","recovered")))
     update.covid$deaths <- get_data_from_url(update.covid$day, update.covid$month,item='deaths')
     update.covid$community <- get_data_from_url(update.covid$day, update.covid$month,item='community')
-    covid_data <- cbind(covid_data,update.covid)
+    covid_data <- rbind(covid_data,update.covid)
     save(covid_data, file = "covid_data.rda")
-  }
 }
 ```
 
