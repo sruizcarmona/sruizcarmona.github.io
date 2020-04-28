@@ -429,7 +429,7 @@ valueBox(
 Row {data-height=45}
 ---------------------
 
-### Total cases {.value-box}
+### Total cases {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$cases_new
@@ -440,7 +440,7 @@ valueBox(
   )
 ```
 
-### Total deaths {.value-box}
+### Total deaths {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$deaths - yesterday$deaths
@@ -451,7 +451,7 @@ valueBox(
   )
 ```
 
-### Recovered people {.value-box}
+### Recovered people {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$recovered - yesterday$recovered
@@ -462,7 +462,7 @@ valueBox(
   )
 ```
 
-### Active cases {.value-box}
+### Active cases {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$active - yesterday$active
@@ -473,7 +473,7 @@ valueBox(
   )
 ```
 
-### Patients in hospital {.value-box}
+### Patients in hospital {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$hospital - yesterday$hospital
@@ -484,7 +484,7 @@ valueBox(
   )
 ```
 
-### Patients in ICU {.value-box}
+### Patients in ICU {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$icu - yesterday$icu
@@ -495,7 +495,7 @@ valueBox(
   )
 ```
 
-### Community transmission {.value-box}
+### Community transmission {.value-box .no-mobile}
 
 ```{r}
 v <- daily.status$community - yesterday$community
@@ -525,7 +525,7 @@ colnames(week.changes) <- colnames(daily.status)[-c(1,3)]
 Row {data-height=50}
 ---------------------
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$cases
@@ -536,7 +536,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$deaths
@@ -547,7 +547,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$recovered
@@ -558,7 +558,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$active
@@ -569,7 +569,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$hospital
@@ -580,7 +580,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$icu
@@ -591,7 +591,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = week.changes$community
@@ -619,7 +619,7 @@ colnames(month.changes) <- colnames(daily.status)[-c(1,3)]
 Row {data-height=50}
 ---------------------
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$cases
@@ -630,7 +630,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$deaths
@@ -641,7 +641,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$recovered
@@ -652,7 +652,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$active
@@ -663,7 +663,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$hospital
@@ -674,7 +674,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$icu
@@ -685,7 +685,7 @@ valueBox(
   )
 ```
 
-### {.value-box}
+### {.value-box .no-mobile}
 
 ```{r}
 v = month.changes$community
