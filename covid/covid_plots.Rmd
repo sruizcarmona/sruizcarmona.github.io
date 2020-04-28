@@ -2,7 +2,7 @@
 title: "COVID-19 in Victoria"
 output: 
   flexdashboard::flex_dashboard:
-    vertical_layout: fill
+    vertical_layout: scroll
     orientation: rows
     theme: cosmo
 ---
@@ -341,7 +341,7 @@ fig <- fig %>% layout(title = '',
 ```
 
 
-Row {data-height=70}
+Row {data-height=80}
 ---------------------
 ```{r}
 valueBox(
@@ -354,7 +354,7 @@ maincolor <- 'gray'
 updatecolor <- 'darkgray'
 ```
 
-Row {data-height=80}
+Row {data-height=100}
 ---------------------
 
 ### Total cases {.value-box}
@@ -426,7 +426,7 @@ valueBox(
 )
 ```
 
-Row {data-height=30}
+Row {data-height=45}
 ---------------------
 
 ### Total cases {.value-box}
@@ -506,10 +506,11 @@ valueBox(
   )
 ```
 
+
 Row {data-height=10}
 ---------------------
 
-Row {data-height=30}
+Row {data-height=40}
 ---------------------
 
 ```{r}
@@ -521,7 +522,7 @@ week.changes <- as.data.frame(t(as.numeric(daily.status[,-c(1,3)]) - as.numeric(
 colnames(week.changes) <- colnames(daily.status)[-c(1,3)]
 ```
 
-Row {data-height=40}
+Row {data-height=50}
 ---------------------
 
 ### {.value-box}
@@ -602,7 +603,7 @@ valueBox(
 ```
 
 
-Row {data-height=30}
+Row {data-height=40}
 ---------------------
 
 ```{r}
@@ -615,7 +616,7 @@ colnames(month.changes) <- colnames(daily.status)[-c(1,3)]
 ```
 
 
-Row {data-height=40}
+Row {data-height=50}
 ---------------------
 
 ### {.value-box}
@@ -698,7 +699,7 @@ valueBox(
 Row {data-height=10}
 ---------------------
 
-Row {data-height=300}
+Row {data-height=500}
 ---------------------
 
 ### 
@@ -707,7 +708,7 @@ Row {data-height=300}
 fig
 ```
 
-Row {data-height=20}
+Row {data-height=30}
 ---------------------
 ```{r}
 update.date <- format(Sys.Date(), format="%A, %B %e at")
@@ -719,7 +720,7 @@ valueBox(
 )
 ```
 
-Row {data-height=20}
+Row {data-height=30}
 ---------------------
 
 
