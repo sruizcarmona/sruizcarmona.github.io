@@ -720,15 +720,8 @@ valueBox(
 )
 ```
 
-Row {data-height=30}
+Row {data-height=20}
 ---------------------
 
-
-```{r}
-valueBox(
-    value = tags$h5("Created by @RuizCSergio"),
-    color = "",
-    href = "http://twitter.com/RuizCSergio"
-)
-```
+##### Created by [\@RuizCSergio](http://twitter.com/RuizCSergio)
 
