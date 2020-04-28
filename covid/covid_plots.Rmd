@@ -1,46 +1,39 @@
 ---
 title: "COVID-19 in Victoria"
 output: 
-  html_document:
-    # toc: true
-    # toc_depth: 3
-    # toc_float: 
-      # collapsed: false
-      # smooth_scroll: true
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+    orientation: rows
     theme: cosmo
-    # df_print: paged
-    highlight: tango
-    code_folding: "none"
-#knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
 ---
 
-<!-- <script> -->
-<!-- $(document).ready(function() { -->
-<!--   $items = $('div#TOC li'); -->
-<!--   $items.each(function(idx) { -->
-<!--     num_ul = $(this).parentsUntil('#TOC').length; -->
-<!--     $(this).css({'text-indent': num_ul * 10, 'padding-left': 0}); -->
-<!--   }); -->
-
-<!-- }); -->
-<!-- </script> -->
+<style>                     
+.value-box .icon .fa {
+font-size: 180%; 
+color: rgba(255, 255, 255, 0.8);
+top: 7px;
+}
+.value-box .value {
+font-size: 23px;
+margin: -5px 0 3px 0;
+}
+.value-box h6 {
+font-size: 20px;
+font-weight: bold; 
+margin-top: -8px;
+}
+.navbar{
+  visibility: hidden
+}
+body {
+    padding-top: 10px;
+}
+</style>
 
 ```{r include = FALSE}
-knitr::opts_chunk$set(echo=FALSE, message=FALSE,warning=FALSE)
+# knitr::opts_chunk$set(echo=FALSE, message=FALSE,warning=FALSE)
 # rmarkdown::render(input='covid_plots.Rmd', output_file = "index.html")
 ```
-
-```{r results='asis'}
-## SUBTITLE
-update.date <- format(Sys.Date(), format="%A, %B %e at")
-update.time <- format(Sys.time(), format="%H:%M")
-update.text <- paste("#### Last updated on",update.date,update.time)
-cat(update.text)
-```
-
-
-<!-- # Covid Plots -->
-
 
 ```{r }
 # library(ggplot2)
@@ -48,6 +41,8 @@ library(tidyverse)
 library(RCurl)
 library(plotly)
 library(RColorBrewer)
+library(flexdashboard)
+library(shiny)
 ```
 
 ```{r}
@@ -254,21 +249,6 @@ get_data_from_url <- function(day,month,item){
 }
 ```
 
-```{r}
-# for (d in days_to_plot[4]){
-#   d <- unlist(str_split(d," "))
-#   htmlcode<- get_cases_from_url(d[2],d[1],"html")
-#   k <- unlist(str_split(str_subset(htmlcode,"died")," "))
-#   print(unlist(regmatches(k, gregexpr("[[:digit:]]+",k))))
-# }
-# htmlcode <- get_cases_from_url(23,'march','html')
-# get_cases_from_url(27,'march','community')
-# get_cases_from_url(1,'april','community')
-# get_cases_from_url(7,'april','community')
-# get_cases_from_url(14,'april','community')
-```
-
-
 <!-- ## initialize matrix with dates to calculate -->
 
 ```{r}
@@ -320,7 +300,6 @@ if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)
 }
 ```
 
-
 ```{r}
 covid_data <- covid_data %>%
   mutate(
@@ -335,52 +314,7 @@ covid_data <- covid_data %>%
 ```
 
 ```{r}
-# apply(covid_data,1,function(x) get_cases_from_url(x['day'],x['month'],item="patients"))
-```
-
-
-```{r echo=F}
-corr <- 10
-p <- ggplot(covid_data,aes(x=date)) +
-  geom_line(aes(y=cases,color="Cases")) +
-  geom_line(aes(y=active,color = 'Active')) +
-  geom_line(aes(y=hospital*corr,color = 'Hospital')) +
-  geom_line(aes(y=icu*corr,color = 'ICU')) +
-  geom_line(aes(y=recovered,color = 'Recovered')) +
-  geom_line(aes(y=deaths*corr,color = 'Deaths')) +
-  geom_line(aes(y=community*corr,color = 'Community')) +
-  # geom_line(aes(y=community_perc_new*corr,color = 'Community (% new cases)')) +
-  scale_x_date(date_breaks = "2 day", date_labels = "%b %d") + 
-  # ylim(c(0,1500)) +
-  scale_y_continuous(sec.axis = sec_axis(~./corr, name = "Hospital / ICU \n Deaths / Community (# people)",
-                                         breaks = seq(0, 150, by = 30)),
-                     breaks = seq(0, 1500, by = 300),limits = c(0,1500)) +
-  # xlim (c(as.Date("2020-03-23"),as.Date("2020-04-14"))) +
-  labs(y = "Total / Active / Recovered Cases (#)",
-       x = "Day",
-       colour = "") +
-  theme_bw() +
-  # ggtitle("COVID-19 in Victoria") +
-  scale_colour_manual(values = c("black", "red","blue","brown","green","purple","orange2")) +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1),
-        legend.position = "bottom",
-        # plot.margin = margin(t=0.2, b=0.2, l=0.5, r=0.5, "cm"),
-        axis.title.y.right = element_text(margin = margin(t = 0, r = 0, b = 0, l = 10)),
-        panel.grid.minor.x = element_blank(),
-        panel.grid = element_line(size=0.04,colour="black"))
-```
-
-
-
-
-```{r}
-# for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep 'The total number of coronavirus' |  grep -v field | grep -v lang | awk '{print $13}' | sed 's/,//'; done
-# for f in 1 2 3 4 5 6 7 8 9; do curl https://www.dhhs.vic.gov.au/coronavirus-update-victoria-$f-april-2020 2> /dev/null | grep patients | grep -v GP; done
-```
-
-
-```{r}
-mycols <- c("black", "red","green","blue","orange","purple")
+mycols <- c("black", "firebrick","green","blue","orange","purple")
 mycols <- c('black','#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3')
 mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'))
 fig <- plot_ly(data = covid_data, x = ~date, y = ~cases, name = 'Cases', type = 'scatter', mode = 'lines',
@@ -404,10 +338,396 @@ fig <- fig %>% layout(title = '',
                       margin = list(r = 70),
                       legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
                       hovermode='x')
+```
+
+
+Row {data-height=70}
+---------------------
+```{r}
+valueBox(
+    value = tags$h2(paste0("COVID-19 in Victoria: ",format(Sys.Date(), format="%A, %B %e, %Y"))),
+    color = ""
+)
+daily.status <- covid_data[dim(covid_data)[1],]
+yesterday <- covid_data[dim(covid_data)[1]-1,]
+maincolor <- 'gray'
+updatecolor <- 'darkgray'
+```
+
+Row {data-height=80}
+---------------------
+
+### Total cases {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$cases,
+    icon = "fa-user",
+    color = maincolor
+  )
+```
+
+### Total deaths {.value-box}
+
+```{r}
+  valueBox(daily.status$deaths,
+           icon = "fa-times-circle",
+    color=maincolor
+    )
+```
+
+### Recovered people {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$recovered,
+    icon = "fa-user-check",
+    color=maincolor
+)
+```
+
+### Active cases {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$active,
+    icon = "fa-user-clock",
+    color=maincolor
+)
+```
+
+### Patients in hospital {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$hospital,
+    icon = "fa-stethoscope",
+    color=maincolor
+)
+```
+
+### Patients in ICU {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$icu,
+    icon = "fa-ambulance",
+    color=maincolor
+)
+```
+
+### Community transmission {.value-box}
+
+```{r}
+valueBox(
+    value = daily.status$community,
+    icon = "fa-users",
+    color=maincolor
+)
+```
+
+Row {data-height=30}
+---------------------
+
+### Total cases {.value-box}
+
+```{r}
+v <- daily.status$cases_new
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Total deaths {.value-box}
+
+```{r}
+v <- daily.status$deaths - yesterday$deaths
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Recovered people {.value-box}
+
+```{r}
+v <- daily.status$recovered - yesterday$recovered
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Active cases {.value-box}
+
+```{r}
+v <- daily.status$active - yesterday$active
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Patients in hospital {.value-box}
+
+```{r}
+v <- daily.status$hospital - yesterday$hospital
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Patients in ICU {.value-box}
+
+```{r}
+v <- daily.status$icu - yesterday$icu
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+### Community transmission {.value-box}
+
+```{r}
+v <- daily.status$community - yesterday$community
+valueBox(
+    value = "",
+    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    color = updatecolor
+  )
+```
+
+Row {data-height=10}
+---------------------
+
+Row {data-height=30}
+---------------------
+
+```{r}
+valueBox(
+    value = tags$h4("Weekly Changes"),
+    color = ""
+)
+week.changes <- as.data.frame(t(as.numeric(daily.status[,-c(1,3)]) - as.numeric(covid_data[dim(covid_data)[1]-7,-c(1,3)])))
+colnames(week.changes) <- colnames(daily.status)[-c(1,3)]
+```
+
+Row {data-height=40}
+---------------------
+
+### {.value-box}
+
+```{r}
+v = week.changes$cases
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 50) "firebrick" else "warning",
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$deaths
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 5) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 5) "firebrick" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$recovered
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 200) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v >= 200) "success" else "primary"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$active
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$hospital
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$icu
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = week.changes$community
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 10) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 10) "firebrick" else "warning"
+  )
+```
+
+
+Row {data-height=30}
+---------------------
+
+```{r}
+valueBox(
+    value = tags$h4("Monthly Changes"),
+    color = ""
+)
+month.changes <- as.data.frame(t(as.numeric(daily.status[,-c(1,3)]) - as.numeric(covid_data[dim(covid_data)[1]-30,-c(1,3)])))
+colnames(month.changes) <- colnames(daily.status)[-c(1,3)]
+```
+
+
+Row {data-height=40}
+---------------------
+
+### {.value-box}
+
+```{r}
+v = month.changes$cases
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 50) "firebrick" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$deaths
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 5) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 5) "firebrick" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$recovered
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 200) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v >= 200) "success" else "primary"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$active
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$hospital
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$icu
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
+    color = if (v <= 0) "success" else "warning"
+  )
+```
+
+### {.value-box}
+
+```{r}
+v = month.changes$community
+valueBox(
+    value = if (v > 0) sprintf("%+d", v) else v,
+    icon = if (v > 10) "fa-angle-double-up" else "fa-angle-up",
+    color = if (v > 10) "firebrick" else "warning"
+  )
+```
+
+Row {data-height=10}
+---------------------
+
+Row {data-height=300}
+---------------------
+
+### 
+
+```{r}
 fig
 ```
+
+Row {data-height=20}
+---------------------
 ```{r}
-# f <- ggplotly(p)
-# f
+update.date <- format(Sys.Date(), format="%A, %B %e at")
+update.time <- format(Sys.time(), format="%H:%M")
+update.text <- paste("Last updated on",update.date,update.time)
+valueBox(
+    value = tags$h5(update.text),
+    color = ""
+)
+```
+
+Row {data-height=20}
+---------------------
+
+
+```{r}
+valueBox(
+    value = tags$h5("Created by @RuizCSergio"),
+    color = "",
+    href = "http://twitter.com/RuizCSergio"
+)
 ```
 
