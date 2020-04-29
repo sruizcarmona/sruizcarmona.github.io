@@ -5,6 +5,8 @@ output:
     vertical_layout: scroll
     orientation: rows
     theme: cosmo
+    includes:
+        in_header: goo_anal.html
 ---
 
 <style>                     
@@ -310,7 +312,7 @@ if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)
 ```{r}
 covid_data <- covid_data %>%
   mutate(
-    active = cases - recovered,
+    active = cases - recovered - deaths,
     recovered_perc = round(recovered / cases * 100,1),
     community_perc_total = round(community / cases * 100,1),
     cases_new = c(0,diff(cases)),
@@ -442,7 +444,7 @@ Row {data-height=45}
 v <- daily.status$cases_new
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -453,7 +455,7 @@ valueBox(
 v <- daily.status$deaths - yesterday$deaths
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -464,7 +466,7 @@ valueBox(
 v <- daily.status$recovered - yesterday$recovered
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -475,7 +477,7 @@ valueBox(
 v <- daily.status$active - yesterday$active
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -486,7 +488,7 @@ valueBox(
 v <- daily.status$hospital - yesterday$hospital
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -497,7 +499,7 @@ valueBox(
 v <- daily.status$icu - yesterday$icu
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
@@ -508,7 +510,7 @@ valueBox(
 v <- daily.status$community - yesterday$community
 valueBox(
     value = "",
-    caption = tags$h6(if (v > 0) sprintf("%+d", v) else v),
+    caption = tags$h6(if (v >= 0) sprintf("%+d", v) else v),
     color = updatecolor
   )
 ```
