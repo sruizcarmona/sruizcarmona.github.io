@@ -6,7 +6,7 @@ output:
     orientation: rows
     theme: cosmo
     includes:
-        in_header: goo_anal.html
+        in_header: goo_anal.htm
 ---
 
 <style>                     
