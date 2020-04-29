@@ -136,8 +136,15 @@ fix_old_reports <- function(cdata){
 get_dhhs_url <- function(day,month){
   dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
   dhhs.url <- gsub(" ","",dhhs.url)
+  weekday <- tolower(format(Sys.Date(), format="%A"))
   if (!url.exists(dhhs.url)) {
-    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+      if (!url.exists(dhhs.url)) {
+          dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',month)
+          if (!url.exists(dhhs.url)) {
+              dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
+          }
+      }
   }
   if (!url.exists(dhhs.url)){
     return(FALSE)
@@ -696,7 +703,7 @@ valueBox(
   )
 ```
 
-Row {data-height=10}
+Row {data-height=30}
 ---------------------
 
 Row {data-height=500}
