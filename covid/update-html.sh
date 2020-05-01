@@ -7,7 +7,7 @@ file_date=`GetFileInfo -m covid_data.rda | cut -d' ' -f1 | awk '{print $3$1$2}' 
 today=`date  +%Y%m%d`
 
 # check also that link exists
-today_day=`date +%d`
+today_day=`date +%-d`
 today_month=`date +%B | tr '[:upper:]' '[:lower:]'`
 today_weekday=`date +%A | tr '[:upper:]' '[:lower:]'`
 today_url=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}-2020`
