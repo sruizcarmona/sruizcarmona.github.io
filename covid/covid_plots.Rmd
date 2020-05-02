@@ -148,6 +148,18 @@ get_dhhs_url <- function(day,month){
           }
       }
   }
+  day <- paste0("0",day)
+  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
+  dhhs.url <- gsub(" ","",dhhs.url)
+  if (!url.exists(dhhs.url)) {
+       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+       if (!url.exists(dhhs.url)) {
+           dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',     month)
+           if (!url.exists(dhhs.url)) {
+               dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
+           }
+       }
+   }
   if (!url.exists(dhhs.url)){
     return(FALSE)
   }
