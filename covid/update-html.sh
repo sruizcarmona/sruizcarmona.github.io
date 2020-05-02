@@ -21,12 +21,26 @@ elif ! curl --output /dev/null --silent --head --fail "$today_url"; then
     if ! curl --output /dev/null --silent --head --fail "$today_url2"; then
         if ! curl --output /dev/null --silent --head --fail "$today_url3"; then
             if ! curl --output /dev/null --silent --head --fail "$today_url4"; then
-                exit
+                today_day=`date +%d`
+                today_url=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}-2020`
+                today_url2=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}`
+                today_url3=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}`
+                today_url4=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}-2020`
+            if ! curl --output /dev/null --silent --head --fail "$today_url"; then
+                if ! curl --output /dev/null --silent --head --fail "$today_url2"; then
+                    if ! curl --output /dev/null --silent --head --fail "$today_url3"; then
+                        if ! curl --output /dev/null --silent --head --fail "$today_url4"; then
+                            exit
+                        fi
+                    fi
+                fi
             fi
         fi
     fi
 fi
+fi
 
+echo 'hola'
 # only run following lines if file is from yesterday and the links exist
 Rscript -e 'library(rmarkdown); rmarkdown::render("covid_plots.Rmd", encoding = encoding, output_file = "index.html")'
 git commit -am 'covidplots update'
