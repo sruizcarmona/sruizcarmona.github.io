@@ -111,6 +111,7 @@ numbers_only <- function(x) grepl("^[0-9]+([,.])?$", x)
 # clean HTML
 cleanHTML <- function(htmlString) {
   htmlString <- gsub(".&nbsp;", "", htmlString, fixed =TRUE)
+  htmlString <- gsub(". &nbsp;", " ", htmlString, fixed =TRUE)
   htmlString <- gsub("\\.<.*?>", "", htmlString)
   return(gsub("<.*?>", "", htmlString))
   }
@@ -186,8 +187,11 @@ get_data_from_url <- function(day,month,item){
   if (item == 'patients'){
     pat_match <- str_subset(htmlcode,"patients in intensive care")
     pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"Currently"))))
+    # pat_clean <- cleanHTML(pat_clean)
     pat_parsed <- unlist(str_split(pat_clean[!str_detect(pat_clean,"community")]," "))
     patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
+    if(any(patients > 50000)) {patients <- patients[patients < 50000]}
+    # remove tests, as some times it gets selected
     if (length(patients) == 2){
       patients <- c(patients[1],word2num(pat_parsed[which (pat_parsed == 'including') +1]),patients[2])
     }
