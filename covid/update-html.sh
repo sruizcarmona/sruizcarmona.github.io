@@ -40,7 +40,6 @@ elif ! curl --output /dev/null --silent --head --fail "$today_url"; then
 fi
 fi
 
-echo 'hola'
 # only run following lines if file is from yesterday and the links exist
 Rscript -e 'library(rmarkdown); rmarkdown::render("covid_plots.Rmd", encoding = encoding, output_file = "index.html")'
 git commit -am 'covidplots update'
