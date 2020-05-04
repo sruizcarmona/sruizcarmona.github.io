@@ -139,7 +139,9 @@ fix_old_reports <- function(cdata){
 get_dhhs_url <- function(day,month){
   dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
   dhhs.url <- gsub(" ","",dhhs.url)
-  weekday <- tolower(format(Sys.Date(), format="%A"))
+  months <- 1:12
+  names(months) <- tolower(month.name)
+  weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[month]),"-",day))))
   if (!url.exists(dhhs.url)) {
       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
       if (!url.exists(dhhs.url)) {
@@ -188,9 +190,13 @@ get_data_from_url <- function(day,month,item){
   }
   if (item == 'patients'){
     pat_match <- str_subset(htmlcode,"patients in intensive care")
-    pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"Currently"))))
-    # pat_clean <- cleanHTML(pat_clean)
-    pat_parsed <- unlist(str_split(pat_clean[!str_detect(pat_clean,"community")]," "))
+    pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"[.] "))))
+    pat_clean <- cleanHTML(pat_clean)
+    # remove sentences without needed information (community transmission and tests)
+    pat_clean <- pat_clean[!str_detect(pat_clean,"community")]
+    pat_clean <- pat_clean[!str_detect(pat_clean,"tests")]
+    # split by words
+    pat_parsed <- unlist(str_split(pat_clean," "))
     patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
     if(any(patients > 50000)) {patients <- patients[patients < 50000]}
     # remove tests, as some times it gets selected
@@ -279,7 +285,7 @@ get_data_from_url <- function(day,month,item){
 <!-- ## initialize matrix with dates to calculate -->
 
 ```{r}
-# # initialize covid_data as of 27/04 and save it as covid_data.rda
+# # # initialize covid_data as of 27/04 and save it as covid_data.rda
 # startdate <- as.Date("2020-03-23")
 # enddate <- as.Date(Sys.Date())
 # today <- unlist(str_split(tolower(gsub(" 0", " ",format(enddate, format="%B %d")))," "))
