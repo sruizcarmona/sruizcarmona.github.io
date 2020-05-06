@@ -200,8 +200,16 @@ get_data_from_url <- function(day,month,item){
     patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
     if(any(patients > 50000)) {patients <- patients[patients < 50000]}
     # remove tests, as some times it gets selected
-    if (length(patients) == 2){
-      patients <- c(patients[1],word2num(pat_parsed[which (pat_parsed == 'including') +1]),patients[2])
+    # manually get from words to numbers the hospital and icu cases
+    if (length(patients) < 3){
+      # get numbers from all words and keep only the ones with numbers
+      extra_num <- sapply(pat_parsed,word2num)[!is.na(sapply(pat_parsed,word2num))]
+      if (length(patients == 1)){
+        patients <- c(extra_num,patients)
+      } else {
+        # patients <- c(patients[1],word2num(pat_parsed[which (pat_parsed == 'including') +1]),patients[2])
+        patients <- c(patients[1],extra_num[1],patients[2])
+      }
     }
     return(patients[c(1:3)])
   }
