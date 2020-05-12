@@ -24,6 +24,20 @@ font-size: 20px;
 font-weight: bold; 
 margin-top: -8px;
 }
+.r0 {
+margin-right: 72%;
+}
+h3 {
+font-size:19px;
+margin-right: 20px;
+margin-top: 10.5px;
+margin-bottom: 10.5px;
+display: block;
+font-weight: bold;
+font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif;
+line-height: 1.1;
+color: inherit;
+}
 .navbar{
   visibility: hidden
 }
@@ -354,33 +368,68 @@ covid_data <- covid_data %>%
 # covid_data
 ```
 
+<!-- R0 approx -->
+
 ```{r}
-mycols <- c("black", "firebrick","green","blue","orange","purple")
-mycols <- c('black','#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3')
-mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'))
-fig <- plot_ly(data = covid_data, x = ~date, y = ~cases, name = 'Cases', type = 'scatter', mode = 'lines',
-               line = list(color = mycols[1]))
-fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered', mode = 'lines',line = list(color = mycols[2]))
-fig <- fig %>% add_trace(y = ~active, name = 'Active', mode = 'lines',line = list(color = mycols[3]))
-fig <- fig %>% add_trace(y = ~community, name = 'Community', mode = 'lines',yaxis = 'y2',line = list(color = mycols[4]))
-fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital', mode = 'lines',yaxis = 'y2',line = list(color = mycols[5]))
-fig <- fig %>% add_trace(y = ~icu, name = 'ICU', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
-fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
-fig <- fig %>% layout(title = '',
-                      xaxis = list(title = "Date",tickangle=-60, type='date', tickformat= '%b %e',
-                                   range = ~date, autotick=F,
-                                   linecolor='black',linewidth=0.5,mirror=T),
-                      yaxis = list(side = 'left', title = 'Total / Active / Recovered Cases (#)',
-                                   range=c(0,1800),
-                                   linecolor='black',linewidth=0.5,mirror=T),
-                      yaxis2 = list(side = 'right', overlaying = "y",
-                                    title = 'Hospital / ICU \n Deaths / Community (# people)',
-                                    showgrid=FALSE, zeroline=T, range=c(0,180), textangle = 90),
-                      margin = list(r = 70),
-                      legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
-                      hovermode='x')
+# https://www.ub.edu/aqr/covid19/?p=349&lang=en#_ftn1
+y <- covid_data$cases_new
+t <- length(y)
+k <- 7
+q <- 7
+# up <- sum(y[c((t-7):t)])
+# down <- sum(y[c((t-7-7):(t-7))])
+# ro <- round(up/down,2)
+covid_data$ro <- NA
+# get ro for all days
+for (d in c((k+q):t)){
+  up <- sum(y[c((d-q):d)])
+  down <- sum(y[c((d-q-k):(d-k))])
+  covid_data$ro[d] <- round(up/down,2)
+}
 ```
 
+```{r}
+# mycols <- c("black", "firebrick","green","blue","orange","purple")
+mycols <- c('black','#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3')
+mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'),'darkred')
+fig <- plot_ly(data = covid_data,x = ~date)
+fig <- fig %>% add_trace(y = ~cases, name = 'Cases',type='scatter', mode = 'lines',line = list(color = mycols[1]))
+fig <- fig %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y2',marker = list(color = rgb(0,0,0,0.2)))
+fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered',type='scatter', mode = 'lines',line = list(color = mycols[2]))
+fig <- fig %>% add_trace(y = ~active, name = 'Active',type='scatter', mode = 'lines',line = list(color = mycols[3]))
+fig <- fig %>% add_trace(y = ~community, name = 'Community',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[4]))
+fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[5]))
+fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
+fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
+fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
+fig <- fig %>% layout(title = '',
+                      xaxis = list(title = "Date",tickangle=-60, type='date', tickformat= '%b %e',
+                                   range = ~date, autotick=F, domain=c(0,0.92),
+                                   linewidth = 3,showgrid=T,
+                                   linecolor='black',linewidth=0.5,mirror=T),
+                      yaxis = list(side = 'left', title = 'Total / Active / Recovered Cases (#)',
+                                   linewidth = 3,
+                                   range=c(0,1800),
+                                   linecolor='black',linewidth=0.5,mirror=T),
+                      yaxis2 = list(side = 'right', overlaying = "y", anchor='x',
+                                    title = 'Daily Cases / Hospital / ICU \n Deaths / Community (# people)',
+                                    linewidth = 3,
+                                    showgrid=FALSE, zeroline=T, range=c(0,180), textangle = 90),
+                      yaxis3 = list(side = 'right', overlaying = "y",
+                                    tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
+                                    title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
+                                    linewidth = 3,
+                                    showgrid=FALSE, zeroline=T, range=c(0,5), textangle = 90),
+                      margin = list(r = 25),
+                      legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
+                      hovermode='x')
+# fig
+# https://plotly.com/r/axes/
+# https://plotly.com/r/graphing-multiple-chart-types/
+```
+
+<!-- ################ WEBSITE SETUP ############## -->
+<!-- icons from https://fontawesome.com/icons?d=gallery&v=5.0.0&m=free -->
 
 Row {data-height=80}
 ---------------------
@@ -547,8 +596,28 @@ valueBox(
   )
 ```
 
+Row {data-height=50}
+---------------------
+```{r}
+valueBox(
+    value = tags$h3("Current R0"),
+    color = ""
+)
+```
 
-Row {data-height=10}
+### {.value-box .no-mobile .r0}
+
+```{r}
+v <- daily.status$ro
+valueBox(
+    value = v,
+    # caption = tags$h6(v),
+    icon = "fa-exclamation-triangle",
+    color = 'lightcoral'
+)
+```
+
+Row {data-height=5}
 ---------------------
 
 Row {data-height=40}
