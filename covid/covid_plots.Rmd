@@ -145,6 +145,7 @@ fix_old_reports <- function(cdata){
   # 16 april no web report (I did 13 just to run the code)
   cdata[25,c(1:3)] <- c("april","16","2020-04-16")
   cdata[25,c(4:9)]<- c(1301,39,18,1137,14,132)
+  cdata[54,4] <- 1543
   return(cdata)
 }
 ```
