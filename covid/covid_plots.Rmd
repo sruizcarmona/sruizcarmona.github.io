@@ -640,7 +640,7 @@ Row {data-height=50}
 ```{r}
 v = week.changes$cases
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
     color = if (v > 50) "firebrick" else "warning",
   )
@@ -651,9 +651,9 @@ valueBox(
 ```{r}
 v = week.changes$deaths
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
-    icon = if (v > 5) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 5) "firebrick" else "warning"
+    value = if (v >= 0) sprintf("%+d", v) else v,
+    icon = if (v > 5) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    color = if (v > 5) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
@@ -662,8 +662,8 @@ valueBox(
 ```{r}
 v = week.changes$recovered
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
-    icon = if (v > 200) "fa-angle-double-up" else "fa-angle-up",
+    value = if (v >= 0) sprintf("%+d", v) else v,
+    icon = if (v > 200) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
     color = if (v >= 200) "success" else "primary"
   )
 ```
@@ -673,7 +673,7 @@ valueBox(
 ```{r}
 v = week.changes$active
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -684,7 +684,7 @@ valueBox(
 ```{r}
 v = week.changes$hospital
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -695,7 +695,7 @@ valueBox(
 ```{r}
 v = week.changes$icu
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -706,9 +706,9 @@ valueBox(
 ```{r}
 v = week.changes$community
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
-    icon = if (v > 10) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 10) "firebrick" else "warning"
+    value = if (v >= 0) sprintf("%+d", v) else v,
+    icon = if (v > 10) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    color = if (v > 10) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
@@ -734,7 +734,7 @@ Row {data-height=50}
 ```{r}
 v = month.changes$cases
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
     color = if (v > 50) "firebrick" else "warning"
   )
@@ -745,9 +745,9 @@ valueBox(
 ```{r}
 v = month.changes$deaths
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
-    icon = if (v > 5) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 5) "firebrick" else "warning"
+    value = if (v >= 0) sprintf("%+d", v) else v,
+    icon = if (v > 5) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    color = if (v > 5) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
@@ -756,7 +756,7 @@ valueBox(
 ```{r}
 v = month.changes$recovered
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 200) "fa-angle-double-up" else "fa-angle-up",
     color = if (v >= 200) "success" else "primary"
   )
@@ -767,7 +767,7 @@ valueBox(
 ```{r}
 v = month.changes$active
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -778,7 +778,7 @@ valueBox(
 ```{r}
 v = month.changes$hospital
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -789,7 +789,7 @@ valueBox(
 ```{r}
 v = month.changes$icu
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
+    value = if (v >= 0) sprintf("%+d", v) else v,
     icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v <= 0) "success" else "warning"
   )
@@ -800,9 +800,9 @@ valueBox(
 ```{r}
 v = month.changes$community
 valueBox(
-    value = if (v > 0) sprintf("%+d", v) else v,
-    icon = if (v > 10) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 10) "firebrick" else "warning"
+    value = if (v >= 0) sprintf("%+d", v) else v,
+    icon = if (v > 10) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    color = if (v > 10) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
