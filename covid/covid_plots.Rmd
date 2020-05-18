@@ -203,7 +203,9 @@ get_data_from_url <- function(day,month,item){
   }
   if (item == 'cases'){
     cases_match <- str_subset(htmlcode,"total number of coronavirus")
-    cases <- as.numeric(str_replace(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is "))[2]," "))[1],",",""))
+    cases_match <- cleanHTML(cases_match)
+    cases_match <- cases_match[cases_match != ""]
+    cases <- as.numeric(str_replace_all(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is "))[2]," "))[1],",",""))
     return(cases)
   }
   if (item == 'patients'){
