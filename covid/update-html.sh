@@ -43,5 +43,4 @@ fi
 # only run following lines if file is from yesterday and the links exist
 Rscript -e 'library(rmarkdown); rmarkdown::render("covid_plots.Rmd", encoding = encoding, output_file = "index.html")'
 git commit -am 'covidplots update'
-
 git push origin master
