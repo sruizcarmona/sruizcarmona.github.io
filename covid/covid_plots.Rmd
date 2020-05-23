@@ -227,7 +227,6 @@ get_data_from_url <- function(day,month,item){
       extra_num <- sapply(pat_parsed,word2num)[!is.na(sapply(pat_parsed,word2num))]
       if (length(patients) == 1){
         patients <- c(extra_num,patients)
-        cat('here')
       } else {
         # patients <- c(patients[1],word2num(pat_parsed[which (pat_parsed == 'including') +1]),patients[2])
         patients <- c(patients[1],extra_num[1],patients[2])
