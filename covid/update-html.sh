@@ -16,7 +16,8 @@ today_url3=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today
 today_url4=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}-2020`
 
 if [ $file_date -eq $today ]; then
-    exit
+#    exit
+echo 'hola'
 elif ! curl --output /dev/null --silent --head --fail "$today_url"; then
     if ! curl --output /dev/null --silent --head --fail "$today_url2"; then
         if ! curl --output /dev/null --silent --head --fail "$today_url3"; then

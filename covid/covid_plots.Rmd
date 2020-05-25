@@ -415,9 +415,10 @@ fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yax
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    type='date',
-                                   tickformat= '%b %e',
-                                   range = ~date, autotick=F, domain=c(0,0.92),
-                                   # ticktext = c(1:dim(covid_data)[1]),
+                                   tickformat = '%b %e',
+                                   range = ~date,
+                                   autotick = F,
+                                   domain = c(0,0.92),
                                    linewidth = 3,showgrid=T,
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis = list(side = 'left', title = 'Total / Recovered Cases (#)',
@@ -439,7 +440,51 @@ fig <- fig %>% layout(title = '',
 # fig
 # https://plotly.com/r/axes/
 # https://plotly.com/r/graphing-multiple-chart-types/
+# https://plotly.com/r/reference/#layout-xaxis-tickmode
 ```
+
+```{r}
+plot_ly(chart_data, 
+        x = ~`FiscalYear_Days`,
+        y = ~Last_Year,
+        name = 'Last_Year', 
+        type = 'scatter',
+        mode = 'lines',
+        hoverinfo = "text",
+        text = ~paste0("Month-Day: ", `Month-Day`, "\nRenewed: ", Last_Year)
+) %>%
+add_trace(y = ~This_Year, 
+            name = 'This_Year',
+            hoverinfo = "text",
+            text = ~paste0("Renewed: ", This_Year)
+) %>% 
+layout(title=paste0("<b>Renewals - last year vs. this year</b>"),
+         xaxis = list(title = "<b>Month - Day</b>",
+                      showgrid = FALSE, 
+                      tickangle = 270, 
+                      dtick = 6, 
+                      tickfont = list(size = 11),
+                      # ticktext = chart_data$`Month-Day`,
+                      # tickvals = chart_data$FiscalYear_Days,
+                      # tickmode = "array",
+                      tickangle = 270
+         ),
+         yaxis = list(title = "<b>Renewals</b>",
+                      ticklen = 8, 
+                      tickcolor = "#000000",
+                      tick0 = 0, 
+                      tickfont = list(size = 11)),
+         showlegend = TRUE,
+         legend = list(x = 0, 
+                       y = 1,
+                       orientation = "h", 
+                       traceorder = "normal"),
+         margin = list(t = 25, b = 50, r = 10, l = 40)
+) %>% 
+config(displayModeBar = FALSE) %>%
+layout(hovermode = 'compare')
+```
+
 
 <!-- ################ WEBSITE SETUP ############## -->
 <!-- icons from https://fontawesome.com/icons?d=gallery&v=5.0.0&m=free -->
