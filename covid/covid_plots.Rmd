@@ -308,6 +308,14 @@ get_data_from_url <- function(day,month,item){
       comm_n <- as.numeric(unlist(lapply(comm_clean,word2num)))
     }
     comm <- comm_n[!is.na(comm_n)][1]
+    # some times, there is no "community" word on the transmission lines, fix it by changing "community" to "unknown"
+    if (sum(!is.na(comm)) == 0) {
+      comm_match <- cleanHTML(str_subset(str_subset(htmlcode,"transmission"),"unknown"))
+      comm_clean <- unlist(str_split(unlist(str_split(comm_match,"transmission. "))[1]," "))
+      comm_n <- as.numeric(comm_clean[numbers_only(comm_clean)])
+      if (length(comm_n) == 0){ comm_n <- as.numeric(unlist(lapply(comm_clean,word2num))) }
+      comm <- comm_n[!is.na(comm_n)][1]
+    }
     return(comm)
   }
 }
