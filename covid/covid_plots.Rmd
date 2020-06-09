@@ -197,7 +197,7 @@ get_dhhs_url <- function(day,month){
 ```{r}
 #function to get cases per day
 get_data_from_url <- function(day,month,item){
-  dhhs.url <- get_dhhs_url(day,month)
+  dhhs.url <- get_dhhs_url(as.character(day),as.character(month))
   con <- url(dhhs.url)
   htmlcode <- readLines(con)
   close.connection(con)
@@ -206,13 +206,13 @@ get_data_from_url <- function(day,month,item){
   }
   if (item == 'cases'){
     cases_match <- str_subset(htmlcode,"total number of coronavirus")
-    cases_match <- cleanHTML(cases_match)
+    # cases_match <- cleanHTML(cases_match)
     cases_match <- cases_match[cases_match != ""]
     cases <- as.numeric(str_replace_all(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is "))[2]," "))[1],",",""))
     return(cases)
   }
   if (item == 'patients'){
-    pat_match <- str_subset(htmlcode,"patients in intensive care")
+    pat_match <- str_subset(htmlcode," in intensive care")
     pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"[.] "))))
     pat_clean <- cleanHTML(pat_clean)
     # remove sentences without needed information (community transmission and tests)
