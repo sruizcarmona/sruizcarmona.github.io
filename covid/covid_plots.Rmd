@@ -189,9 +189,11 @@ get_dhhs_url <- function(day,month){
        }
   }
   # add media-release to base url
-  url.prefix <- 'media-release-'
-  day <- day.bkp
-  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
+  if (!url.exists(dhhs.url)) {
+    url.prefix <- 'media-release-'
+    day <- day.bkp
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
+  }
   if (!url.exists(dhhs.url)) {
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
     if (!url.exists(dhhs.url)) {
