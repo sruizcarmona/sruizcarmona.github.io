@@ -158,34 +158,63 @@ fix_old_reports <- function(cdata){
 
 ```{r}
 get_dhhs_url <- function(day,month){
-  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
+  day.bkp <- day
+  url.prefix <- ''
+  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
   dhhs.url <- gsub(" ","",dhhs.url)
   months <- 1:12
   names(months) <- tolower(month.name)
   weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[month]),"-",day))))
   if (!url.exists(dhhs.url)) {
-      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
       if (!url.exists(dhhs.url)) {
-          dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',month)
+          dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
           if (!url.exists(dhhs.url)) {
-              dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
+              dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
           }
       }
   }
   if (!url.exists(dhhs.url)) {
     day <- paste0("0",day)
-    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month,'-2020')
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
     dhhs.url <- gsub(" ","",dhhs.url)
   }
   if (!url.exists(dhhs.url)) {
-       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',day,'-',month)
+       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
        if (!url.exists(dhhs.url)) {
-           dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-',     month)
+           dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
            if (!url.exists(dhhs.url)) {
-               dhhs.url <- paste0('https://www.dhhs.vic.gov.au/coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
+               dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
            }
        }
-   }
+  }
+  # add media-release to base url
+  url.prefix <- 'media-release-'
+  day <- day.bkp
+  dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
+  if (!url.exists(dhhs.url)) {
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
+    if (!url.exists(dhhs.url)) {
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
+      if (!url.exists(dhhs.url)) {
+        dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
+      }
+    }
+  }
+  if (!url.exists(dhhs.url)) {
+    day <- paste0("0",day)
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
+    dhhs.url <- gsub(" ","",dhhs.url)
+  }
+  if (!url.exists(dhhs.url)) {
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
+    if (!url.exists(dhhs.url)) {
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
+      if (!url.exists(dhhs.url)) {
+        dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
+      }
+    }
+  }
   if (!url.exists(dhhs.url)){
     return(FALSE)
   }
@@ -412,7 +441,11 @@ for (d in c((k+q):t)){
 # mycols <- c("black", "firebrick","green","blue","orange","purple")
 mycols <- c('black','#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3')
 mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'),'darkred')
-fig <- plot_ly(data = covid_data,x = ~date)
+mytext_x <- format(covid_data$date,format="%b")
+mytext_x[duplicated(mytext_x)] <- ""
+mytext_x <- paste(mytext_x,as.numeric(format(covid_data$date,format="%e")))
+covid_data$i <- as.numeric(rownames(covid_data))
+fig <- plot_ly(data = covid_data,x = ~i)
 fig <- fig %>% add_trace(y = ~cases, name = 'Cases',type='scatter', mode = 'lines',line = list(color = mycols[1]))
 fig <- fig %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y2',marker = list(color = rgb(0,0,0,0.2)))
 fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered',type='scatter', mode = 'lines',line = list(color = mycols[2]))
@@ -424,9 +457,13 @@ fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'li
 fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
-                                   type='date',
-                                   tickformat = '%b %e',
-                                   range = ~date,
+                                   # type='date',
+                                   # tickformat = '%b %e',
+                                   # range = ~date,
+                                   tickmode="array",
+                                   tickvals=covid_data$i,
+                                   ticktext=mytext_x,
+                                   tickfont=list(size=10),
                                    autotick = F,
                                    domain = c(0,0.92),
                                    linewidth = 3,showgrid=T,

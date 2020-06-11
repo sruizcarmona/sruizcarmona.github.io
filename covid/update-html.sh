@@ -10,34 +10,60 @@ today=`date  +%Y%m%d`
 today_day=`date +%-d`
 today_month=`date +%B | tr '[:upper:]' '[:lower:]'`
 today_weekday=`date +%A | tr '[:upper:]' '[:lower:]'`
-today_url=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}-2020`
-today_url2=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}`
-today_url3=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}`
-today_url4=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}-2020`
 
+url_prefix=""
+function get_today_url_all () {
+    today_day=$1
+    url_prefix=$2
+    today_url_all=(
+    https://www.dhhs.vic.gov.au/${url_prefix}coronavirus-update-victoria-${today_day}-${today_month}-2020
+    https://www.dhhs.vic.gov.au/${url_prefix}coronavirus-update-victoria-${today_day}-${today_month}
+    https://www.dhhs.vic.gov.au/${url_prefix}coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}
+    https://www.dhhs.vic.gov.au/${url_prefix}coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}-2020
+    )
+}
+get_today_url_all $today_day  $url_prefix
+
+found=0
 if [ $file_date -eq $today ]; then
     exit
-elif ! curl --output /dev/null --silent --head --fail "$today_url"; then
-    if ! curl --output /dev/null --silent --head --fail "$today_url2"; then
-        if ! curl --output /dev/null --silent --head --fail "$today_url3"; then
-            if ! curl --output /dev/null --silent --head --fail "$today_url4"; then
-                today_day=`date +%d`
-                today_url=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}-2020`
-                today_url2=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_day}-${today_month}`
-                today_url3=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}`
-                today_url4=`echo https://www.dhhs.vic.gov.au/coronavirus-update-victoria-${today_weekday}-${today_day}-${today_month}-2020`
-            if ! curl --output /dev/null --silent --head --fail "$today_url"; then
-                if ! curl --output /dev/null --silent --head --fail "$today_url2"; then
-                    if ! curl --output /dev/null --silent --head --fail "$today_url3"; then
-                        if ! curl --output /dev/null --silent --head --fail "$today_url4"; then
-                            exit
-                        fi
-                    fi
-                fi
-            fi
+else
+    for i in "${today_url_all[@]}"; do
+        if [[ "$found" -eq 0 ]] && curl --output /dev/null --silent --head --fail "$i"; then
+            found=1
+            break
         fi
+    done
+    # try with date with preceded 0
+    today_day=`date +%d`
+    for i in "${today_url_all[@]}"; do
+        if [[ "$found" -eq 0 ]] && curl --output /dev/null --silent --head --fail "$i"; then
+            found=1
+            break
+        fi
+    done
+    #try with different prefix
+    today_day=`date +%-d`
+    url_prefix="media-release-"
+    get_today_url_all $today_day  $url_prefix
+    for i in "${today_url_all[@]}"; do
+        if [[ "$found" -eq 0 ]] && curl --output /dev/null --silent --head --fail "$i"; then
+            found=1
+            break
+        fi
+    done
+    # try with date with preceded 0
+    today_day=`date +%d`
+    for i in "${today_url_all[@]}"; do
+        if [[ "$found" -eq 0 ]] && curl --output /dev/null --silent --head --fail "$i"; then
+            found=1
+            break
+        fi
+    done
+    # exit if url not found
+    if [[ "$found" -eq 0 ]]; then
+        exit
     fi
-fi
 fi
 
 # only run following lines if file is from yesterday and the links exist
