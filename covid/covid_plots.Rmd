@@ -383,6 +383,32 @@ get_data_from_url <- function(day,month,item){
 ```
 
 ```{r}
+get_today_data <- function(today.raw){
+  today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
+  if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
+    update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
+    update.covid$date <- today.raw
+    update.covid$cases <- get_data_from_url(update.covid$day, update.covid$month,item='cases')
+    update.covid <- cbind(update.covid,setNames(data.frame(t(get_data_from_url(update.covid$day, update.covid$month,item='patients'))),c("hospital","icu","recovered")))
+    update.covid$deaths <- get_data_from_url(update.covid$day, update.covid$month,item='deaths')
+    update.covid$community <- get_data_from_url(update.covid$day, update.covid$month,item='community')
+    return(update.covid)
+  }
+}
+
+# if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)){
+  #   update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
+  #   update.covid$date <- today.raw
+  #   update.covid$cases <- get_data_from_url(update.covid$day, update.covid$month,item='cases')
+  #   update.covid <- cbind(update.covid,setNames(data.frame(t(get_data_from_url(update.covid$day, update.covid$month,item='patients'))),c("hospital","icu","recovered")))
+  #   update.covid$deaths <- get_data_from_url(update.covid$day, update.covid$month,item='deaths')
+  #   update.covid$community <- get_data_from_url(update.covid$day, update.covid$month,item='community')
+  #   covid_data <- rbind(covid_data,update.covid)
+  # }
+```
+
+
+```{r}
 # new process:
 # load covid_data.rda
 # check if today's link exists
@@ -393,16 +419,24 @@ get_data_from_url <- function(day,month,item){
 load("covid_data.rda")
 today.raw <- as.Date(Sys.Date())
 today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
+months <- 1:12
+names(months) <- tolower(month.name)
+today.weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[today[1]]),"-",today[2]))))
 
-if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)){
-    update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
-    update.covid$date <- today.raw
-    update.covid$cases <- get_data_from_url(update.covid$day, update.covid$month,item='cases')
-    update.covid <- cbind(update.covid,setNames(data.frame(t(get_data_from_url(update.covid$day, update.covid$month,item='patients'))),c("hospital","icu","recovered")))
-    update.covid$deaths <- get_data_from_url(update.covid$day, update.covid$month,item='deaths')
-    update.covid$community <- get_data_from_url(update.covid$day, update.covid$month,item='community')
-    covid_data <- rbind(covid_data,update.covid)
-    save(covid_data, file = "covid_data.rda")
+# check if monday and then check if weekend was calculated
+if (today.weekday == 'monday'){
+  today.sat <- today.raw - 2
+  update.covid <- get_today_data(today.sat)
+  covid_data <- rbind(covid_data,update.covid)
+  today.sun <- today.raw - 1
+  update.covid <- get_today_data(today.sun)
+  covid_data <- rbind(covid_data,update.covid)
+} 
+
+if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
+  update.covid <- get_today_data(today.raw)
+  covid_data <- rbind(covid_data,update.covid)
+  save(covid_data, file = "covid_data.rda")
 }
 ```
 
@@ -472,12 +506,12 @@ fig <- fig %>% layout(title = '',
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis = list(side = 'left', title = 'Total / Recovered Cases (#)',
                                    linewidth = 3,
-                                   range=c(0,2500),
+                                   range=c(0,3000),
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis2 = list(side = 'right', overlaying = "y", anchor='x',
                                     title = 'Active & Daily Cases / Hospital / ICU \n Deaths / Community (# people)',
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,250), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,300), textangle = 90),
                       yaxis3 = list(side = 'right', overlaying = "y",
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
