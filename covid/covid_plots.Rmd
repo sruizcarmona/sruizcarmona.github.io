@@ -460,7 +460,7 @@ covid_data <- covid_data %>%
 y <- covid_data$cases_new
 t <- length(y)
 k <- 7
-q <- 7
+q <- 14
 # up <- sum(y[c((t-7):t)])
 # down <- sum(y[c((t-7-7):(t-7))])
 # ro <- round(up/down,2)
@@ -506,12 +506,12 @@ fig <- fig %>% layout(title = '',
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis = list(side = 'left', title = 'Total / Recovered Cases (#)',
                                    linewidth = 3,
-                                   range=c(0,3000),
+                                   range=c(0,4000),
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis2 = list(side = 'right', overlaying = "y", anchor='x',
                                     title = 'Active & Daily Cases / Hospital / ICU \n Deaths / Community (# people)',
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,300), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,400), textangle = 90),
                       yaxis3 = list(side = 'right', overlaying = "y",
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
