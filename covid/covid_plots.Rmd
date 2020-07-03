@@ -327,7 +327,8 @@ get_data_from_url <- function(day,month,item){
   }
   if (item == 'community'){
     # check word died
-    comm_match <- str_subset(str_subset(htmlcode,"transmission"),"community|unknown")
+    comm_match <- str_subset(str_subset(htmlcode,"transmission|source"),"community|unknown")
+
     # clean html tags
     comm_match <- cleanHTML(comm_match)
     # split everything on words
