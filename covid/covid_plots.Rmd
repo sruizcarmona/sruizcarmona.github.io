@@ -491,6 +491,7 @@ fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode =
 fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
 fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
 fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
+my_ylim <- 3000
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    # type='date',
@@ -506,12 +507,12 @@ fig <- fig %>% layout(title = '',
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis = list(side = 'left', title = 'Total / Recovered Cases (#)',
                                    linewidth = 3,
-                                   range=c(0,4000),
+                                   range=c(0,my_ylim),
                                    linecolor='black',linewidth=0.5,mirror=T),
                       yaxis2 = list(side = 'right', overlaying = "y", anchor='x',
                                     title = 'Active & Daily Cases / Hospital / ICU \n Deaths / Community (# people)',
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,400), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/5), textangle = 90),
                       yaxis3 = list(side = 'right', overlaying = "y",
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
