@@ -461,7 +461,7 @@ covid_data <- covid_data %>%
 y <- covid_data$cases_new
 t <- length(y)
 k <- 7
-q <- 14
+q <- 7
 # up <- sum(y[c((t-7):t)])
 # down <- sum(y[c((t-7-7):(t-7))])
 # ro <- round(up/down,2)
@@ -492,7 +492,7 @@ fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode =
 fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
 fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
 fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
-my_ylim <- 3000
+my_ylim <- 4000
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    # type='date',
