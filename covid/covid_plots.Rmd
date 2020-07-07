@@ -128,6 +128,8 @@ cleanHTML <- function(htmlString) {
   htmlString <- gsub(". &nbsp;", " ", htmlString, fixed =TRUE)
   htmlString <- gsub("&nbsp;", " ", htmlString, fixed =TRUE)
   htmlString <- gsub("\\.<.*?>", "", htmlString)
+  htmlString <- gsub("\\.<.*?>", "", htmlString)
+  htmlString <- gsub("\\t", "", htmlString)
   return(gsub("<.*?>", "", htmlString))
   }
 ```
@@ -236,19 +238,18 @@ get_data_from_url <- function(day,month,item){
     return (htmlcode)
   }
   if (item == 'cases'){
-    cases_match <- str_subset(htmlcode,"total number of coronavirus")
-    # cases_match <- cleanHTML(cases_match)
+    cases_match <- str_subset(htmlcode,"total number of coronavirus|total number of cases")
+    cases_match <- cleanHTML(cases_match)
     cases_match <- cases_match[cases_match != ""]
-    cases <- as.numeric(str_replace_all(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is "))[2]," "))[1],",",""))
+    cases <- as.numeric(str_replace_all(unlist(str_split(unlist(str_split(cases_match[1],"Victoria is | now at "))[2]," "))[1],",",""))
     return(cases)
   }
   if (item == 'patients'){
-    pat_match <- str_subset(htmlcode," in intensive care")
+    pat_match <- str_subset(htmlcode," in intensive care|recovered")
     pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"[.] "))))
     pat_clean <- cleanHTML(pat_clean)
     # remove sentences without needed information (community transmission and tests)
-    pat_clean <- pat_clean[!str_detect(pat_clean,"community")]
-    pat_clean <- pat_clean[!str_detect(pat_clean,"tests")]
+    pat_clean <- pat_clean[!str_detect(pat_clean,"community|tests|ctive cases")]
     # split by words
     pat_parsed <- unlist(str_split(pat_clean," "))
     patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
@@ -460,8 +461,8 @@ covid_data <- covid_data %>%
 # https://www.ub.edu/aqr/covid19/?p=349&lang=en#_ftn1
 y <- covid_data$cases_new
 t <- length(y)
-k <- 7
-q <- 7
+k <- 14
+q <- 14
 # up <- sum(y[c((t-7):t)])
 # down <- sum(y[c((t-7-7):(t-7))])
 # ro <- round(up/down,2)
@@ -481,6 +482,8 @@ mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'),'darkred')
 mytext_x <- format(covid_data$date,format="%b")
 mytext_x[duplicated(mytext_x)] <- ""
 mytext_x <- paste(mytext_x,as.numeric(format(covid_data$date,format="%e")))
+# remove all odd numbers in x axis for better readability
+for (i in c(1:length(mytext_x))) {if (i %% 2 == 0 & !str_detect(mytext_x[i],"[a-z]")){mytext_x[i] <- " "}}
 covid_data$i <- as.numeric(rownames(covid_data))
 fig <- plot_ly(data = covid_data,x = ~i)
 fig <- fig %>% add_trace(y = ~cases, name = 'Cases',type='scatter', mode = 'lines',line = list(color = mycols[1]))
