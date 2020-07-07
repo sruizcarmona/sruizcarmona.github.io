@@ -36,6 +36,7 @@ else
     done
     # try with date with preceded 0
     today_day=`date +%d`
+    get_today_url_all $today_day  $url_prefix
     for i in "${today_url_all[@]}"; do
         if [[ "$found" -eq 0 ]] && curl --output /dev/null --silent --head --fail "$i"; then
             found=1
