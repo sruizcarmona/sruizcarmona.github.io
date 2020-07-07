@@ -521,7 +521,7 @@ fig <- fig %>% layout(title = '',
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,5), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/500), textangle = 90),
                       margin = list(r = 25),
                       legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
                       hovermode='x')
