@@ -489,7 +489,7 @@ fig <- plot_ly(data = covid_data,x = ~i)
 fig <- fig %>% add_trace(y = ~cases, name = 'Cases',type='scatter', mode = 'lines',line = list(color = mycols[1]))
 fig <- fig %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y2',marker = list(color = rgb(0,0,0,0.2)))
 fig <- fig %>% add_trace(y = ~recovered, name = 'Recovered',type='scatter', mode = 'lines',line = list(color = mycols[2]))
-fig <- fig %>% add_trace(y = ~active, name = 'Active',type='scatter', yaxis='y2', mode = 'lines',line = list(color = mycols[3]))
+fig <- fig %>% add_trace(y = ~active, name = 'Active',type='scatter', yaxis='y', mode = 'lines',line = list(color = mycols[3]))
 fig <- fig %>% add_trace(y = ~community, name = 'Community',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[4]))
 fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[5]))
 fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
@@ -516,12 +516,12 @@ fig <- fig %>% layout(title = '',
                       yaxis2 = list(side = 'right', overlaying = "y", anchor='x',
                                     title = 'Active & Daily Cases / Hospital / ICU \n Deaths / Community (# people)',
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/4), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/5), textangle = 90),
                       yaxis3 = list(side = 'right', overlaying = "y",
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/400), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/500), textangle = 90),
                       margin = list(r = 25),
                       legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
                       hovermode='x')
