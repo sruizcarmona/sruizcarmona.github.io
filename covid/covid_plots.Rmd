@@ -497,7 +497,7 @@ fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode =
 fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
 fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
 fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
-my_ylim <- 6000
+my_ylim <- 10000
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    # type='date',
@@ -523,7 +523,7 @@ fig <- fig %>% layout(title = '',
                                     tickfont=list(color=mycols[10]), titlefont=list(color=mycols[10]),
                                     title = 'R0', anchor='free', position=1, showline=TRUE,linecolor = mycols[10],
                                     linewidth = 3,
-                                    showgrid=FALSE, zeroline=T, range=c(0,my_ylim/500), textangle = 90),
+                                    showgrid=FALSE, zeroline=T, range=c(0,10), textangle = 90),
                       margin = list(r = 25),
                       legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
                       hovermode='x')
