@@ -240,7 +240,7 @@ get_data_from_url <- function(day,month,item){
   if (item == 'cases'){
     cases_match <- str_subset(htmlcode,"total number of coronavirus|total number of cases")
     cases_match <- cleanHTML(cases_match)
-    cases_match <- cases_match[cases_match != ""]
+    cases_match <- gsub(",","",cases_match[cases_match != ""])
     cases_n <- as.numeric(unlist(str_split(paste(cases_match,collapse=" ")," "))[numbers_only(unlist(str_split(paste(cases_match,collapse=" ")," ")))])
     # cases <- as.numeric(str_replace_all(unlist(str_split(unlist(str_split(paste(cases_match,collapse=" "),"Victoria is | now at "))[2]," "))[1],",",""))
     cases <- max(cases_n)
@@ -294,7 +294,9 @@ get_data_from_url <- function(day,month,item){
     if (length(death_n) == 0){
       death_n <- as.numeric(unlist(lapply(death_clean,word2num)))
     }
-    deaths <- death_n[!is.na(death_n)][1]
+    # deaths <- death_n[!is.na(death_n)][1]
+    deaths <- max(death_n[!is.na(death_n)])
+
     # if still, there is no option, change the key word to death and repeat the same
     if (length(death_match) == 0 || length(death_n[!is.na(death_n)]) == 0) {
         death_match <- str_subset(htmlcode,"death")
@@ -332,8 +334,9 @@ get_data_from_url <- function(day,month,item){
     # check word died
     comm_match <- str_subset(str_subset(htmlcode,"transmission|source"),"community|unknown")
 
-    # clean html tags
+    # clean html tags and remove commas
     comm_match <- cleanHTML(comm_match)
+    comm_match <- gsub(",","",comm_match)
     # split everything on words
     comm_clean <- unlist(str_split(comm_match,"transmission. "))[1]
     comm_clean <- unlist(str_split(comm_clean," "))
@@ -532,6 +535,35 @@ fig <- fig %>% layout(title = '',
 # https://plotly.com/r/graphing-multiple-chart-types/
 # https://plotly.com/r/reference/#layout-xaxis-tickmode
 ```
+
+```{r}
+fig2 <- plot_ly(data = covid_data,x = ~i)
+fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
+my_ylim2 <- round(max(covid_data$cases_new)/1000+0.05,1)*1000
+fig2 <- fig2 %>% layout(title = '',
+                      xaxis = list(title = "Date",tickangle=-60,
+                                   # type='date',
+                                   # tickformat = '%b %e',
+                                   # range = ~date,
+                                   tickmode="array",
+                                   tickvals=covid_data$i,
+                                   ticktext=mytext_x,
+                                   tickfont=list(size=10),
+                                   autotick = F,
+                                   domain = c(0,0.92),
+                                   linewidth = 3,showgrid=F,
+                                   linecolor='black',linewidth=0.5,mirror=T),
+                      yaxis = list(side = 'left', title = 'Daily Cases (#)',
+                                   linewidth = 3,
+                                   range=c(0,my_ylim2),
+                                   linecolor='black',linewidth=0.5,mirror=T),
+                      margin = list(r = 25),
+                      legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
+                      hovermode='x')
+# fig2
+```
+
+
 
 <!-- ################ WEBSITE SETUP ############## -->
 <!-- icons from https://fontawesome.com/icons?d=gallery&v=5.0.0&m=free -->
@@ -921,6 +953,15 @@ Row {data-height=500}
 
 ```{r}
 fig
+```
+
+Row {data-height=400}
+---------------------
+
+###
+
+```{r}
+fig2
 ```
 
 Row {data-height=30}
