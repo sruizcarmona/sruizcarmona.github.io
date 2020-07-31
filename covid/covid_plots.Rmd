@@ -500,7 +500,7 @@ fig <- fig %>% add_trace(y = ~hospital, name = 'Hospital',type='scatter', mode =
 fig <- fig %>% add_trace(y = ~icu, name = 'ICU',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[6]))
 fig <- fig %>% add_trace(y = ~deaths, name = 'Deaths',type='scatter', mode = 'lines',yaxis = 'y2',line = list(color = mycols[7]))
 fig <- fig %>% add_trace(y = ~ro, name = 'R0',type='scatter', mode = 'lines',yaxis = 'y3',line = list(color = mycols[10]))
-my_ylim <- 10000
+my_ylim <- 15000
 fig <- fig %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    # type='date',
