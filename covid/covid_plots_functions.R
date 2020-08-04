@@ -90,6 +90,7 @@ fix_old_reports <- function(cdata){
   return(cdata)
 }
 #################
+rcurl.useragent <- "curl/7.39.0 Rcurl/1.95.4.5"
 get_dhhs_url <- function(day,month){
   day.bkp <- day
   url.prefix <- ''
@@ -98,59 +99,59 @@ get_dhhs_url <- function(day,month){
   months <- 1:12
   names(months) <- tolower(month.name)
   weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[month]),"-",day))))
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
-      if (!url.exists(dhhs.url)) {
+      if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
           dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
-          if (!url.exists(dhhs.url)) {
+          if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
               dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
           }
       }
   }
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
     day <- paste0("0",day)
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
     dhhs.url <- gsub(" ","",dhhs.url)
   }
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
        dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
-       if (!url.exists(dhhs.url)) {
+       if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
            dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
-           if (!url.exists(dhhs.url)) {
+           if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
                dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
            }
        }
   }
   # add media-release to base url
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
     url.prefix <- 'media-release-'
     day <- day.bkp
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
   }
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
-    if (!url.exists(dhhs.url)) {
+    if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
-      if (!url.exists(dhhs.url)) {
+      if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
         dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month,'-2020')
       }
     }
   }
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
     day <- paste0("0",day)
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month,'-2020')
     dhhs.url <- gsub(" ","",dhhs.url)
   }
-  if (!url.exists(dhhs.url)) {
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
     dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',day,'-',month)
-    if (!url.exists(dhhs.url)) {
+    if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
       dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-',month)
-      if (!url.exists(dhhs.url)) {
+      if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
         dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-victoria-',weekday,'-',day,'-', month,'-2020')
       }
     }
   }
-  if (!url.exists(dhhs.url)){
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)){
     return(FALSE)
   }
   return (dhhs.url)
