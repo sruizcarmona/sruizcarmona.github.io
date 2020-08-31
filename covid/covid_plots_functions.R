@@ -205,7 +205,7 @@ get_data_from_url <- function(day,month,item){
   if (item == 'deaths'){
     # fix covid19 so it doesnt account as a number
     # htmlcode <- gsub("COVID-19","COVID",htmlcode)
-    max_deaths <- 499 #to check death numbers are not artifacts
+    max_deaths <- 999 #to check death numbers are not artifacts
     # check word died
     death_match <- str_subset(htmlcode,"died")
     # clean html tags
