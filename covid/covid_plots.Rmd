@@ -252,7 +252,7 @@ fig <- fig %>% layout(title = '',
 
 ```{r}
 # add 14 day average to covid_data
-covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),1))
+covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),0))
 fig2 <- plot_ly(data = covid_data,x = ~i)
 fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
 fig2 <- fig2 %>% add_trace(y = ~avg14, name = '14-day Avg', type='scatter', mode = 'lines',line = list(color = mycols[1]))
