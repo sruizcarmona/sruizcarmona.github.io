@@ -59,6 +59,7 @@ library(plotly)
 library(RColorBrewer)
 library(flexdashboard)
 library(shiny)
+library(zoo)
 ```
 
 ```{r}
@@ -191,8 +192,17 @@ mycols <- c('black', brewer.pal(n = 8, name = 'Dark2'),'darkred')
 mytext_x <- format(covid_data$date,format="%b")
 mytext_x[duplicated(mytext_x)] <- ""
 mytext_x <- paste(mytext_x,as.numeric(format(covid_data$date,format="%e")))
+mytext_x <- str_replace(mytext_x,"^ ", "")
 # remove all odd numbers in x axis for better readability
-for (i in c(1:length(mytext_x))) {if (i %% 2 == 0 & !str_detect(mytext_x[i],"[a-z]")){mytext_x[i] <- " "}}
+for (i in c(1:length(mytext_x))) {
+  if (!is.na(as.numeric(mytext_x[i]))){
+    if(as.numeric(mytext_x[i]) %% 2 == 0 | str_detect(mytext_x[i],"31")){
+      mytext_x[i] <- " "
+    } 
+  }
+  # if ((i %% 2 == 0 & !str_detect(mytext_x[i],"[a-z]")) | str_detect(mytext_x[i],"31")){
+  #   mytext_x[i] <- " "}
+}
 covid_data$i <- as.numeric(rownames(covid_data))
 fig <- plot_ly(data = covid_data,x = ~i)
 fig <- fig %>% add_trace(y = ~cases, name = 'Cases',type='scatter', mode = 'lines',line = list(color = mycols[1]))
@@ -241,9 +251,16 @@ fig <- fig %>% layout(title = '',
 ```
 
 ```{r}
+# add 14 day average to covid_data
+covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),1))
 fig2 <- plot_ly(data = covid_data,x = ~i)
 fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
-my_ylim2 <- round(max(covid_data$cases_new)/1000+0.05,1)*1000
+fig2 <- fig2 %>% add_trace(y = ~avg14, name = '14-day Avg', type='scatter', mode = 'lines',line = list(color = mycols[1]))
+fig2 <- fig2 %>% add_segments(x=0,xend=max(covid_data$i),y=50,yend=50,name="Step 2 Threshold",showlegend=F)
+fig2 <- fig2 %>% add_annotations(x= 150,y= 65,text = "Step 2 Threshold",showarrow = F,font = list(color = 'green', size = 10))
+fig2 <- fig2 %>% add_segments(x=0,xend=max(covid_data$i),y=5,yend=5,name="Step 3 Threshold",showlegend=F)
+fig2 <- fig2 %>% add_annotations(x= 150,y= 20,text = "Step 3 Threshold",showarrow = F,font = list(color = 'red', size = 10))
+my_ylim2 <- round(max(covid_data$cases_new)/1000+0.05,2)*1000
 fig2 <- fig2 %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
                                    # type='date',
@@ -262,6 +279,7 @@ fig2 <- fig2 %>% layout(title = '',
                                    range=c(0,my_ylim2),
                                    linecolor='black',linewidth=0.5,mirror=T),
                       margin = list(r = 25),
+                      # showlegend=FALSE,
                       legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
                       hovermode='x')
 # fig2
