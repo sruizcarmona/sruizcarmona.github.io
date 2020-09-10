@@ -267,7 +267,7 @@ get_data_from_url <- function(day,month,item){
     comm_match <- cleanHTML(comm_match)
     comm_match <- gsub(",","",comm_match)
     # split everything on words
-    comm_clean <- unlist(str_split(comm_match,"transmission. "))[1]
+    comm_clean <- unlist(str_split(comm_match,"transmission. "))
     comm_clean <- unlist(str_split(comm_clean," "))
     comm_clean <- comm_clean[!comm_clean == ""]
     # check if there are numbers on the splitted items
@@ -276,7 +276,7 @@ get_data_from_url <- function(day,month,item){
     if (length(comm_n) == 0){
       comm_n <- as.numeric(unlist(lapply(comm_clean,word2num)))
     }
-    comm <- comm_n[!is.na(comm_n)][1]
+    comm <- max(comm_n[!is.na(comm_n)])
     # some times, there is no "community" word on the transmission lines, fix it by changing "community" to "unknown"
     if (sum(!is.na(comm)) == 0) {
       comm_match <- cleanHTML(str_subset(str_subset(htmlcode,"transmission"),"unknown"))

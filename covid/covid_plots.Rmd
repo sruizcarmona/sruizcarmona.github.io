@@ -27,6 +27,9 @@ margin-top: -8px;
 .r0 {
 margin-right: 72%;
 }
+.r1right {
+margin-right: 43.4%;
+}
 h3 {
 font-size:19px;
 margin-right: 20px;
@@ -253,6 +256,11 @@ fig <- fig %>% layout(title = '',
 ```{r}
 # add 14 day average to covid_data
 covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),0))
+# add sum of community cases in the last 14 days (-16 to -2, as DHHS)
+covid_data$unk.total14 <- NA
+for (day in c(16:length(covid_data$community))){
+  covid_data$unk.total14[day] <- covid_data$community[day-1]-covid_data$community[day-15]}
+
 fig2 <- plot_ly(data = covid_data,x = ~i)
 fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
 fig2 <- fig2 %>% add_trace(y = ~avg14, name = '14-day Avg', type='scatter', mode = 'lines',line = list(color = mycols[1]))
@@ -260,6 +268,7 @@ fig2 <- fig2 %>% add_segments(x=0,xend=max(covid_data$i),y=50,yend=50,name="Step
 fig2 <- fig2 %>% add_annotations(x= 150,y= 65,text = "Step 2 Threshold",showarrow = F,font = list(color = 'green', size = 10))
 fig2 <- fig2 %>% add_segments(x=0,xend=max(covid_data$i),y=5,yend=5,name="Step 3 Threshold",showlegend=F)
 fig2 <- fig2 %>% add_annotations(x= 150,y= 20,text = "Step 3 Threshold",showarrow = F,font = list(color = 'red', size = 10))
+fig2 <- fig2 %>% add_trace(y = ~unk.total14, name = '14-day Unknown Total', type='scatter', mode = 'lines',line = list(color = mycols[3]))
 my_ylim2 <- round(max(covid_data$cases_new)/1000+0.05,2)*1000
 fig2 <- fig2 %>% layout(title = '',
                       xaxis = list(title = "Date",tickangle=-60,
@@ -274,7 +283,7 @@ fig2 <- fig2 %>% layout(title = '',
                                    domain = c(0,0.92),
                                    linewidth = 3,showgrid=F,
                                    linecolor='black',linewidth=0.5,mirror=T),
-                      yaxis = list(side = 'left', title = 'Daily Cases (#)',
+                      yaxis = list(side = 'left', title = 'Cases (#)',
                                    linewidth = 3,
                                    range=c(0,my_ylim2),
                                    linecolor='black',linewidth=0.5,mirror=T),
@@ -476,6 +485,41 @@ valueBox(
 )
 ```
 
+Row {data-height=50}
+---------------------
+```{r}
+valueBox(
+    value = tags$h3("14d Status"),
+    color = ""
+)
+```
+
+### {.value-box .no-mobile}
+
+```{r}
+v <- daily.status$avg14
+v <- paste("Average:   ",as.character(v))
+valueBox(
+    value = v,
+    # caption = 'kk',
+    icon = "fa-info-circle",
+    color = 'cadetblue'
+)
+```
+
+### {.value-box .no-mobile .r1right}
+
+```{r}
+v <- daily.status$unk.total14
+v <- paste("Unknown Total:   ",as.character(v))
+valueBox(
+    value = v,
+    # caption = 'kk',
+    icon = "fa-sort-amount-down",
+    color = 'darkcyan'
+)
+```
+
 Row {data-height=5}
 ---------------------
 
@@ -566,7 +610,7 @@ valueBox(
 v = week.changes$community
 valueBox(
     value = if (v >= 0) sprintf("%+d", v) else v,
-    icon = if (v > 10) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v > 10) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
@@ -660,7 +704,7 @@ valueBox(
 v = month.changes$community
 valueBox(
     value = if (v >= 0) sprintf("%+d", v) else v,
-    icon = if (v > 10) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+    icon = if (v > 0) "fa-angle-up" else if (v < 0) "fa-angle-down" else "fa-equals",
     color = if (v > 10) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
