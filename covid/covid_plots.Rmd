@@ -257,9 +257,11 @@ fig <- fig %>% layout(title = '',
 # add 14 day average to covid_data
 covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),0))
 # add sum of community cases in the last 14 days (-16 to -2, as DHHS)
+# to check
+# for (i in c(1,2,3,4,5,6)){for (j in c(12:15)){d=length(com);print(c(i,j));print(com[d-i]-com[d-i-j])}}
 covid_data$unk.total14 <- NA
-for (day in c(16:length(covid_data$community))){
-  covid_data$unk.total14[day] <- covid_data$community[day-1]-covid_data$community[day-15]}
+for (day in c(17:length(covid_data$community))){
+  covid_data$unk.total14[day] <- covid_data$community[day-1]-covid_data$community[day-16]}
 
 fig2 <- plot_ly(data = covid_data,x = ~i)
 fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
