@@ -176,7 +176,7 @@ get_data_from_url <- function(day,month,item){
     return(cases)
   }
   if (item == 'patients'){
-    pat_match <- str_subset(htmlcode," in intensive care|recovered")
+    pat_match <- str_subset(htmlcode,"in intensive care|recovered")
     pat_clean <- gsub("COVID-19","COVID",gsub(",","",unlist(str_split(pat_match,"[.] "))))
     pat_clean <- cleanHTML(pat_clean)
     # remove sentences without needed information (community transmission and tests)

@@ -110,6 +110,8 @@ get_today_data <- function(today.raw){
     return(update.covid)
   }
 }
+#### HTML DEBUG
+# htmlcode <- get_data_from_url(update.covid$day,update.covid$month,item='html')
 
 # if (get_dhhs_url(today[2],today[1])!=FALSE && !any(covid_data$date == today.raw)){
   #   update.covid <- setNames(data.frame(matrix(today,ncol=2)),c("month","day"))
