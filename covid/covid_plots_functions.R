@@ -181,6 +181,7 @@ get_data_from_url <- function(day,month,item){
     pat_clean <- cleanHTML(pat_clean)
     # remove sentences without needed information (community transmission and tests)
     pat_clean <- pat_clean[!str_detect(pat_clean,"community|tests|ctive cases")]
+    pat_clean <- str_replace(pat_clean,'there are no cases','0')
     # split by words
     pat_parsed <- unlist(str_split(pat_clean," "))
     patients <- as.numeric(unlist(regmatches(pat_parsed, gregexpr("[[:digit:]]+", pat_parsed))))
