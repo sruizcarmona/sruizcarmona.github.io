@@ -151,6 +151,35 @@ get_dhhs_url <- function(day,month){
       }
     }
   }
+  # add "for" to base url in for victoria
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+    url.prefix <- ''
+    day <- day.bkp
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',day,'-',month,'-2020')
+  }
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',day,'-',month)
+    if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',weekday,'-',day,'-',month)
+      if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+        dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',weekday,'-',day,'-',month,'-2020')
+      }
+    }
+  }
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+    day <- paste0("0",day)
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',day,'-',month,'-2020')
+    dhhs.url <- gsub(" ","",dhhs.url)
+  }
+  if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+    dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',day,'-',month)
+    if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+      dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',weekday,'-',day,'-',month)
+      if (!url.exists(dhhs.url,useragent=rcurl.useragent)) {
+        dhhs.url <- paste0('https://www.dhhs.vic.gov.au/',url.prefix,'coronavirus-update-for-victoria-',weekday,'-',day,'-', month,'-2020')
+      }
+    }
+  }
   if (!url.exists(dhhs.url,useragent=rcurl.useragent)){
     return(FALSE)
   }
