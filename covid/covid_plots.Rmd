@@ -134,27 +134,27 @@ get_today_data <- function(today.raw){
 # save covid_data
 
 load("covid_data.rda")
-today.raw <- as.Date(Sys.Date())
-today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
-months <- 1:12
-names(months) <- tolower(month.name)
-today.weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[today[1]]),"-",today[2]))))
-
-# check if monday and then check if weekend was calculated
-if (today.weekday == 'monday'){
-  today.sat <- today.raw - 2
-  update.covid <- get_today_data(today.sat)
-  covid_data <- rbind(covid_data,update.covid)
-  today.sun <- today.raw - 1
-  update.covid <- get_today_data(today.sun)
-  covid_data <- rbind(covid_data,update.covid)
-} 
-
-if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
-  update.covid <- get_today_data(today.raw)
-  covid_data <- rbind(covid_data,update.covid)
-  save(covid_data, file = "covid_data.rda")
-}
+# today.raw <- as.Date(Sys.Date())
+# today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
+# months <- 1:12
+# names(months) <- tolower(month.name)
+# today.weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[today[1]]),"-",today[2]))))
+# 
+# # check if monday and then check if weekend was calculated
+# if (today.weekday == 'monday'){
+#   today.sat <- today.raw - 2
+#   update.covid <- get_today_data(today.sat)
+#   covid_data <- rbind(covid_data,update.covid)
+#   today.sun <- today.raw - 1
+#   update.covid <- get_today_data(today.sun)
+#   covid_data <- rbind(covid_data,update.covid)
+# } 
+# 
+# if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
+#   update.covid <- get_today_data(today.raw)
+#   covid_data <- rbind(covid_data,update.covid)
+#   save(covid_data, file = "covid_data.rda")
+# }
 ```
 
 ```{r}
@@ -298,6 +298,39 @@ fig2 <- fig2 %>% layout(title = '',
 # fig2
 ```
 
+```{r}
+# only last 14 days in a plot
+mytext_x <- format(covid_data$date,format="%b")
+mytext_x <- paste(mytext_x,as.numeric(format(covid_data$date,format="%e")))
+
+fig3 <- fig2 %>% layout(xaxis=list(range=covid_data$i[c(length(covid_data$i)-20,length(covid_data$i))],
+                                   ticktext=mytext_x),
+                        yaxis=list(range=c(0,2*max(covid_data$cases_new[c((length(covid_data$i)-20):length(covid_data$i))]))))
+  
+  # # layout(title = '',
+  #                     xaxis = list(title = "Date",tickangle=-60,
+  #                                  # type='date',
+  #                                  # tickformat = '%b %e',
+  #                                  # range = ~date,
+  #                                  tickmode="array",
+  #                                  tickvals=covid_data$i,
+  #                                  ticktext=mytext_x,
+  #                                  tickfont=list(size=10),
+  #                                  autotick = F,
+  #                                  domain = c(0,0.92),
+  # 
+  #                                  linewidth = 3,showgrid=F,
+  #                                  linecolor='black',linewidth=0.5,mirror=T),
+  #                     yaxis = list(side = 'left', title = 'Cases (#)',
+  #                                  linewidth = 3,
+  #                                  range=c(0,my_ylim2),
+  #                                  linecolor='black',linewidth=0.5,mirror=T),
+  #                     margin = list(r = 25),
+  #                     # showlegend=FALSE,
+  #                     legend = list(x = 0.01, y = 0.99, bordercolor = "black", borderwidth=0.5),
+  #                     hovermode='x')
+# fig3
+```
 
 
 <!-- ################ WEBSITE SETUP ############## -->
@@ -733,6 +766,13 @@ Row {data-height=400}
 ```{r}
 fig2
 ```
+
+###
+
+```{r}
+fig3
+```
+
 
 Row {data-height=30}
 ---------------------
