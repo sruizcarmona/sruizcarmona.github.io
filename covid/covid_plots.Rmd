@@ -134,27 +134,27 @@ get_today_data <- function(today.raw){
 # save covid_data
 
 load("covid_data.rda")
-# today.raw <- as.Date(Sys.Date())
-# today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
-# months <- 1:12
-# names(months) <- tolower(month.name)
-# today.weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[today[1]]),"-",today[2]))))
-# 
-# # check if monday and then check if weekend was calculated
-# if (today.weekday == 'monday'){
-#   today.sat <- today.raw - 2
-#   update.covid <- get_today_data(today.sat)
-#   covid_data <- rbind(covid_data,update.covid)
-#   today.sun <- today.raw - 1
-#   update.covid <- get_today_data(today.sun)
-#   covid_data <- rbind(covid_data,update.covid)
-# } 
-# 
-# if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
-#   update.covid <- get_today_data(today.raw)
-#   covid_data <- rbind(covid_data,update.covid)
-#   save(covid_data, file = "covid_data.rda")
-# }
+today.raw <- as.Date(Sys.Date())
+today <- unlist(str_split(tolower(gsub(" 0", " ",format(today.raw, format="%B %d")))," "))
+months <- 1:12
+names(months) <- tolower(month.name)
+today.weekday <- tolower(weekdays(as.Date(paste0(2020,"-",unname(months[today[1]]),"-",today[2]))))
+
+# check if monday and then check if weekend was calculated
+if (today.weekday == 'monday'){
+  today.sat <- today.raw - 2
+  update.covid <- get_today_data(today.sat)
+  covid_data <- rbind(covid_data,update.covid)
+  today.sun <- today.raw - 1
+  update.covid <- get_today_data(today.sun)
+  covid_data <- rbind(covid_data,update.covid)
+}
+
+if (get_dhhs_url(today[2],today[1])!=FALSE & !any(covid_data$date == today.raw)){
+  update.covid <- get_today_data(today.raw)
+  covid_data <- rbind(covid_data,update.covid)
+  save(covid_data, file = "covid_data.rda")
+}
 ```
 
 ```{r}
