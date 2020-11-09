@@ -201,7 +201,7 @@ mytext_x <- str_replace(mytext_x,"^ ", "")
 # remove all odd numbers in x axis for better readability
 for (i in c(1:length(mytext_x))) {
   if (!is.na(as.numeric(mytext_x[i]))){
-    if(as.numeric(mytext_x[i]) %% 2 == 0 | str_detect(mytext_x[i],"31")){
+    if(as.numeric(mytext_x[i]) %% 3 != 1 | str_detect(mytext_x[i],"31")){
       mytext_x[i] <- " "
     } 
   }
@@ -264,6 +264,9 @@ covid_data <- covid_data %>% mutate(avg14=round(rollmeanr(cases_new,14,fill=NA),
 covid_data$unk.total14 <- NA
 for (day in c(17:length(covid_data$community))){
   covid_data$unk.total14[day] <- covid_data$community[day-1]-covid_data$community[day-16]}
+# fix x axis for fig2 (only months)
+mytext_x <- format(covid_data$date,format="%b")
+mytext_x[duplicated(mytext_x)] <- " "
 
 fig2 <- plot_ly(data = covid_data,x = ~i)
 fig2 <- fig2 %>% add_trace(y = ~cases_new, name = 'Daily Cases', type = 'bar', yaxis = 'y',marker = list(color = rgb(0,0,0,0.2)))
