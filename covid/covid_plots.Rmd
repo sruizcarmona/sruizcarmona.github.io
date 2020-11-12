@@ -583,9 +583,9 @@ Row {data-height=50}
 ```{r}
 v = week.changes$cases
 valueBox(
-    value = if (v >= 0) sprintf("%+d", v) else v,
-    icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 50) "firebrick" else "warning",
+     value = if (v >= 0) sprintf("%+d", v) else v,
+     icon = if (v > 50) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+     color = if (v > 50) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
@@ -677,9 +677,9 @@ Row {data-height=50}
 ```{r}
 v = month.changes$cases
 valueBox(
-    value = if (v >= 0) sprintf("%+d", v) else v,
-    icon = if (v > 50) "fa-angle-double-up" else "fa-angle-up",
-    color = if (v > 50) "firebrick" else "warning"
+     value = if (v >= 0) sprintf("%+d", v) else v,
+     icon = if (v > 50) "fa-angle-double-up" else if (v > 0) "fa-angle-up" else "fa-equals",
+     color = if (v > 50) "firebrick" else if (v > 0) "warning" else "success"
   )
 ```
 
