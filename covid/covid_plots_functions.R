@@ -220,6 +220,7 @@ get_data_from_url <- function(day,month,item){
     if (length(patients) < 3){
       # get numbers from all words and keep only the ones with numbers
       extra_num <- sapply(pat_parsed,word2num)[!is.na(sapply(pat_parsed,word2num))]
+      if(!is.numeric(extra_num)){extra_num <- 99}
       if (length(patients) == 1){
         patients <- c(extra_num,patients)
       } else {
