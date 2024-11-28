@@ -33,35 +33,70 @@
 </head>
 
 <body>
-  <!-- Cookie Consent by TermsFeed https://www.TermsFeed.com -->
-<script type="text/javascript" src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script>
-<script type="text/javascript" charset="UTF-8">
-document.addEventListener('DOMContentLoaded', function () {
-cookieconsent.run({"notice_banner_type":"simple","consent_type":"express","palette":"dark","language":"en","page_load_consent_levels":["strictly-necessary"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"website_name":"ruizsergio.com","website_privacy_policy_url":"https://www.iubenda.com/privacy-policy/76929969"});
-});
+  <!-- Add cookie consent css & js -->
+<link rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"
+    data-cfasync="false"></script>
+
+<!-- Add google analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9TF09NKK4W"></script>
+
+<script>
+    // Reads the value of a cookie by name or returns empty string
+    function getCookie(name) {
+        var b = document.cookie.match('(^|[^;]+)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return b ? b.pop() : '';
+    }
+
+    // Actually starting analytics up
+    function addAnalytics() {
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-9TF09NKK4W');
+    }
+
+    // Waiting for the load event
+    window.addEventListener("load", function () {
+        // Reading "cookieconsent_status" cookie
+        const cookieConsent = getCookie('cookieconsent_status');
+
+        // Start analytics if user consented or did not deny
+        if (cookieConsent === 'allow' || cookieConsent === '') {
+            addAnalytics();
+        }
+
+        // Initialise cookie consent banner
+        window.cookieconsent.initialise({
+            "palette": {
+                "popup": {
+                    "background": "#efefef",
+                    "text": "#404040"
+                },
+                "button": {
+                    "background": "#8ec760",
+                    "text": "#ffffff"
+                }
+            },
+            "type": "opt-out",
+            "content": {
+                "allow": "Approve",
+                "dismiss": "Approve",
+                "deny": "Reject"
+            },
+            // Reload the page on user choice to make sure cookie is set
+            onStatusChange: function (status, chosenBefore) {
+                location.reload();
+            }
+        })
+    });
 </script>
-
-<!-- GA -->
-<script type="text/plain" data-cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-9TF09NKK4W"></script>
-<script type="text/plain" data-cookie-consent="tracking">
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-9TF09NKK4W');
-</script>
-<!-- end of GA-->
-
-<noscript>Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a></noscript>
-<!-- End Cookie Consent by TermsFeed https://www.TermsFeed.com -->
-
-
-
-
-
-<!-- Below is the link that users can use to open Preferences Center to change their preferences. Do not modify the ID parameter. Place it where appropriate, style it as needed. -->
-
-<a href="#" id="open_preferences_center">Update cookies preferences</a>
 
 
     <div class="container-info">
